@@ -1,5 +1,9 @@
-import win32com.client
-import win32api
+try:
+    import win32com.client
+    import win32api
+except:
+    #Temp workaround for ci.
+    pass
 
 
 #Codes from http://code.activestate.com/recipes/496767-set-process-priority-in-windows/

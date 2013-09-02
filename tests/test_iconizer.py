@@ -10,7 +10,7 @@ Tests for `iconizer` module.
 
 import unittest
 
-from iconizer import iconizer
+#from iconizer import iconizer
 
 
 class TestIconizer(unittest.TestCase):

@@ -1,22 +1,24 @@
 #import traceback
+import threading
+import Pyro4
 from console_output_collector import ConsoleOutputCollector
 import os
 from logsys.logDir import logDir
 from msg_handler import GuiServiceMsgHandler
 #import webbrowser
-import sys
+#import sys
 #import time
 
 
-class CrossGuiLauncher(object):
+class CrossGuiLauncher(threading.Thread):
     def __init__(self, gui_factory):
         """
         * Create taskbar menu
         """
+        super(CrossGuiLauncher, self).__init__()
         self.gui_factory = gui_factory
         self.taskbar_icon_app = self.gui_factory.create_taskbar_icon_app()
         self.app_list_ui = self.gui_factory.get_app_list()
-        self.taskbar_icon_app["Open Main Page"] = self.open_main
         self.taskbar_icon_app["Show/Hide"] = self.app_list_ui.app_list.toggle
         self.taskbar_icon_app["Exit"] = self.on_quit_clicked
 
@@ -27,6 +29,7 @@ class CrossGuiLauncher(object):
         self.task_to_menu_item_dict = {}
         self.wnd2str = {}
         self.msg_handler = GuiServiceMsgHandler(gui_factory)
+        #self.must_shutdown = False
 
     def start_msg_loop(self):
         self.gui_factory.start_msg_loop()
@@ -49,7 +52,7 @@ class CrossGuiLauncher(object):
         #self.window.hide()
         #self.icon.set_visible(False)
         print 'on_quit_clicked'
-        self.msg_service.stop_all_msg_service_clients(self.session_id)
+        #self.msg_service.stop_all_msg_service_clients(self.session_id)
 
         print 'wait for 10 seconds'
         #Use gui factory method, so UI will not be blocked
@@ -67,13 +70,16 @@ class CrossGuiLauncher(object):
             log_collector.kill_console_process_tree()
 
         #Kill msg service
-        if not (self.msg_service_app is None):
-            self.msg_service_app.kill_console_process_tree()
+        #if not (self.msg_service_app is None):
+        #    self.msg_service_app.kill_console_process_tree()
 
         print "before factory exit"
         print 'all application killed, after main_quit'
         self.gui_factory.exit()
-        sys.exit(0)
+        print "setting shutdown flag"
+        #self.must_shutdown = True
+        self.pyro_daemon.shutdown()
+        #sys.exit(0)
 
     #######################
     # App launch related
@@ -111,13 +117,29 @@ class CrossGuiLauncher(object):
         #self.taskbar_icon_app[app_path_and_param_gen_str] = self.on_app_item_selected
         self.app_list_ui[app_path_and_param_gen_str] = {"checked": False, "action": self.on_app_item_selected}
         return collector
-        
+
     def start_cross_gui_launcher_no_return(self, app_list=[]):
         self.start_msg_loop()
+
+    def launch(self, app_descriptor_dict):
+        self.send_launch_request(app_descriptor_dict)
+
+    def check_loop_condition(self):
+        print "quit flag:", self.must_shutdown
+        return not self.must_shutdown
+
+    def run(self):
+        self.pyro_daemon = Pyro4.Daemon()
+        uri = self.pyro_daemon.register(self)
+        print "uri=", uri
+        #self.pyro_daemon.requestLoop(loopCondition=lambda: not self.must_shutdown)
+        #Pyro4.config.COMMTIMEOUT=3.5
+        self.pyro_daemon.requestLoop()
 
 
 def main():
     from qtconsole.PyQtGuiFactory import PyQtGuiFactory
+
     CrossGuiLauncher(PyQtGuiFactory).start_cross_gui_launcher_no_return()
 
 

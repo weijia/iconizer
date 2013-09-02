@@ -7,7 +7,10 @@ CREATE_NO_WINDOW = 0x8000000
 #import beanstalkc
 import iconizer.logsys.logDir as logDir
 from iconizer.logsys.logSys import *
-import pywintypes
+try:
+    import pywintypes
+except:
+    pass
 import traceback
 
 

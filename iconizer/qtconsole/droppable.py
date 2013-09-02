@@ -3,7 +3,7 @@ from PyQt4.QtCore import  Qt
 from PyQtConsoleOutputWnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
 import sys
-from qtconsole.notification import findFileInProduct
+from iconizer.qtconsole.notification import findFileInProduct
 
 
 class DroppableMain(QtGui.QMainWindow):

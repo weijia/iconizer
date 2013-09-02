@@ -9,7 +9,7 @@ from PyQt4 import QtCore
 import fileTools
 from droppable import Droppable
 from browser import Browser
-from console.gui_factory_base import GuiFactoryBase
+from iconizer.console.gui_factory_base import GuiFactoryBase
 
 
 class PyQtGuiFactory(QtCore.QObject, GuiFactoryBase):

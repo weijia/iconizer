@@ -3,7 +3,7 @@ import threading
 import Pyro4
 from console_output_collector import ConsoleOutputCollector
 import os
-from logsys.logDir import logDir
+from iconizer.logsys.logDir import logDir
 from msg_handler import GuiServiceMsgHandler
 #import webbrowser
 #import sys

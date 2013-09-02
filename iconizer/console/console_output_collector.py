@@ -1,12 +1,12 @@
 import threading
 import subprocess
 import os
-from win import sysprocess
+from iconizer.win import sysprocess
 
 CREATE_NO_WINDOW = 0x8000000
 #import beanstalkc
-import logsys.logDir as logDir
-from logsys.logSys import *
+import iconizer.logsys.logDir as logDir
+from iconizer.logsys.logSys import *
 import pywintypes
 import traceback
 

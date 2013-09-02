@@ -1,6 +1,6 @@
-#import localLibSys
 import win32com.client
 import win32api
+
 
 #Codes from http://code.activestate.com/recipes/496767-set-process-priority-in-windows/
 def set_priority(pid=None,priority=1):
@@ -21,6 +21,7 @@ def set_priority(pid=None,priority=1):
     handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
     win32process.SetPriorityClass(handle, priorityclasses[priority])
 
+
 def terminateProcessByPid(pid):
     PROCESS_TERMINATE = 1
     try:
@@ -29,7 +30,6 @@ def terminateProcessByPid(pid):
         win32api.CloseHandle(handle)
     except:
         print "pid: %d not killed, exception occurs", pid
-
 
 
 def killChildProcessTree(pid, killRoot = False):

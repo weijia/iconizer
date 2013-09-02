@@ -1,7 +1,7 @@
 from PyQt4.QtGui import QStandardItemModel
 from PyQtConsoleOutputWnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
-from qtconsole.notification import findFileInProduct
+from iconizer.qtconsole.notification import findFileInProduct
 
 
 class ApplicationList(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):

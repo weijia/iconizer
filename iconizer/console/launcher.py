@@ -129,7 +129,7 @@ class CrossGuiLauncher(threading.Thread):
         return not self.must_shutdown
 
     def run(self):
-        self.pyro_daemon = Pyro4.Daemon()
+        self.pyro_daemon = Pyro4.Daemon(port=8018)
         uri = self.pyro_daemon.register(self)
         print "uri=", uri
         #self.pyro_daemon.requestLoop(loopCondition=lambda: not self.must_shutdown)

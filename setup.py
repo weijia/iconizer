@@ -27,7 +27,12 @@ setup(
     url='https://github.com/weijia/iconizer',
     packages=[
         'iconizer',
+        'iconizer.console',
+        'iconizer.logsys',
+        'iconizer.win',
+        'iconizer.qtconsole',
     ],
+    package_data={'iconizer': ['qtconsole/*.ui']},
     package_dir={'iconizer': 'iconizer'},
     include_package_data=True,
     install_requires=[

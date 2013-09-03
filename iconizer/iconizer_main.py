@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from console.launcher import CrossGuiLauncher
-from qtconsole.PyQtGuiFactory import PyQtGuiFactory
+from iconizer.console.launcher import CrossGuiLauncher
+from iconizer.qtconsole.PyQtGuiFactory import PyQtGuiFactory
+
 
 class Iconizer(object):
     def __init__(self):

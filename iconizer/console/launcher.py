@@ -10,7 +10,7 @@ from msg_handler import GuiServiceMsgHandler
 #import time
 
 
-class CrossGuiLauncher(threading.Thread):
+class CrossGuiLauncher(object):
     def __init__(self, gui_factory):
         """
         * Create taskbar menu
@@ -77,8 +77,7 @@ class CrossGuiLauncher(threading.Thread):
         print 'all application killed, after main_quit'
         self.gui_factory.exit()
         print "setting shutdown flag"
-        #self.must_shutdown = True
-        self.pyro_daemon.shutdown()
+        self.close_callback()
         #sys.exit(0)
 
     #######################
@@ -121,20 +120,8 @@ class CrossGuiLauncher(threading.Thread):
     def start_cross_gui_launcher_no_return(self, app_list=[]):
         self.start_msg_loop()
 
-    def launch(self, app_descriptor_dict):
-        self.send_launch_request(app_descriptor_dict)
-
-    def check_loop_condition(self):
-        print "quit flag:", self.must_shutdown
-        return not self.must_shutdown
-
-    def run(self):
-        self.pyro_daemon = Pyro4.Daemon(port=8018)
-        uri = self.pyro_daemon.register(self)
-        print "uri=", uri
-        #self.pyro_daemon.requestLoop(loopCondition=lambda: not self.must_shutdown)
-        #Pyro4.config.COMMTIMEOUT=3.5
-        self.pyro_daemon.requestLoop()
+    def add_close_listener(self, callback):
+        self.close_callback = callback
 
 
 def main():

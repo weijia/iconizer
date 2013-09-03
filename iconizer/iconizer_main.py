@@ -11,7 +11,7 @@ class Iconizer(threading.Thread):
         super(Iconizer, self).__init__()
         self.launched_app_dict = {}
 
-    def start_gui(self):
+    def start_gui_no_return(self):
         self.launcher = CrossGuiLauncher(PyQtGuiFactory())
         self.launcher.add_close_listener(self.on_close)
         self.start()
@@ -48,7 +48,7 @@ class Iconizer(threading.Thread):
 
 
 def main():
-    Iconizer().start_gui()
+    Iconizer().start_gui_no_return()
 
 
 if __name__ == '__main__':

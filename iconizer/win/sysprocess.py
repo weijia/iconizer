@@ -1,3 +1,5 @@
+import pywintypes
+
 try:
     import win32com.client
     import win32api
@@ -49,4 +51,11 @@ def killChildProcessTree(pid, killRoot = False):
             killChildProcessTree(childPid, True)
     if True == killRoot:
         terminateProcessByPid(pid)
+
+
+def TerminateProcess(process_info):
+    try:
+        win32api.TerminateProcess(int(process_info._handle), -1)
+    except pywintypes.error:
+        print "killing failed, app may terminated by itself: ", process_info.pid
 

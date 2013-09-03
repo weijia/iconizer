@@ -4,13 +4,8 @@ import os
 from iconizer.win import sysprocess
 
 CREATE_NO_WINDOW = 0x8000000
-#import beanstalkc
 import iconizer.logsys.logDir as logDir
 from iconizer.logsys.logSys import *
-try:
-    import pywintypes
-except:
-    pass
 import traceback
 
 
@@ -210,17 +205,12 @@ class ConsoleOutputCollector:
             #self.appStarted = True
 
     def kill_console_process_tree(self):
-        import win32api
         # TODO: do we need to kill applications?
         for i in self.pList:
             print 'processing:', i.pid, ", handle: ", int(i._handle)
             #print "cmd:", self.progAndParm
             sysprocess.killChildProcessTree(i.pid)
-            try:
-                win32api.TerminateProcess(int(i._handle), -1)
-            except pywintypes.error:
-                print "killing failed, app may terminated by itself: ", i.pid
-
+            sysprocess.TerminateProcess(i)
         for i in self.log_collector_thread_list:
             i.quit()
 

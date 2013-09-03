@@ -3,7 +3,7 @@ import threading
 import Pyro4
 from console_output_collector import ConsoleOutputCollector
 import os
-from iconizer.logsys.logDir import logDir
+from iconizer.logsys.logDir import logDir, ensure_dir
 from msg_handler import GuiServiceMsgHandler
 #import webbrowser
 #import sys
@@ -65,8 +65,6 @@ class CrossGuiLauncher(object):
         print 'start to killing apps'
         #kill all app except msg service
         for log_collector in self.task_to_menu_item_dict.keys():
-            if log_collector == self.msg_service_app:
-                continue
             log_collector.kill_console_process_tree()
 
         #Kill msg service
@@ -92,7 +90,10 @@ class CrossGuiLauncher(object):
         Start an app with full path and parameters passed in a list
         param: [appFullPath, param1, param2, ...]
         """
-        l = logDir(os.path.basename(param[0]))
+        cwd = os.getcwd()
+        log_root = os.path.join(cwd, "logs")
+        ensure_dir(log_root)
+        l = logDir(os.path.basename(param[0]), log_root)
         child_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())
         collector = ConsoleOutputCollector()
         cwd = os.getcwd()
@@ -117,16 +118,18 @@ class CrossGuiLauncher(object):
         self.app_list_ui[app_path_and_param_gen_str] = {"checked": False, "action": self.on_app_item_selected}
         return collector
 
-    def start_cross_gui_launcher_no_return(self, app_list=[]):
-        self.start_msg_loop()
-
+    #######################
+    # External callable
+    #######################
     def add_close_listener(self, callback):
         self.close_callback = callback
+
+    def start_cross_gui_launcher_no_return(self, app_descriptor_dict={}):
+        self.start_msg_loop()
 
 
 def main():
     from qtconsole.PyQtGuiFactory import PyQtGuiFactory
-
     CrossGuiLauncher(PyQtGuiFactory).start_cross_gui_launcher_no_return()
 
 

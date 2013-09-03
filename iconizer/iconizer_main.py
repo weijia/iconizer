@@ -5,7 +5,7 @@ from iconizer.qtconsole.PyQtGuiFactory import PyQtGuiFactory
 
 
 class Iconizer(object):
-    def __init__(self):
+    def start_gui(self):
         self.server = CrossGuiLauncher(PyQtGuiFactory())
         self.server.start()
         self.server.start_cross_gui_launcher_no_return()
@@ -16,7 +16,7 @@ class Iconizer(object):
 
 
 def main():
-    Iconizer()
+    Iconizer().start_gui()
 
 if __name__ == '__main__':
     main()

@@ -11,7 +11,7 @@ class Iconizer(threading.Thread):
         super(Iconizer, self).__init__()
         self.launched_app_dict = {}
 
-    def start_gui_no_return(self, app_descriptor_dict = {}):
+    def start_gui_no_return(self, app_descriptor_dict={}):
         #Create windows
         self.launcher = CrossGuiLauncher(PyQtGuiFactory())
         #Add closing callback, so when GUI was closing, Iconizer will got notified
@@ -26,11 +26,11 @@ class Iconizer(threading.Thread):
         self.start_pyro_daemon()
 
     def start_initial_apps(self):
-        self.execute(self.app_descriptor_dict)
+        self.execute_in_this_app(self.app_descriptor_dict)
 
     def start_pyro_daemon(self):
         self.pyro_daemon = Pyro4.Daemon(port=8018)
-        uri = self.pyro_daemon.register(self)
+        uri = self.pyro_daemon.register(self, "ufs_launcher")
         print "uri=", uri
         #self.pyro_daemon.requestLoop(loopCondition=lambda: not self.must_shutdown)
         #Pyro4.config.COMMTIMEOUT=3.5
@@ -39,7 +39,30 @@ class Iconizer(threading.Thread):
     def on_close(self):
         self.pyro_daemon.shutdown()
 
+    def is_running(self):
+        return True
+
+    def is_server_already_started(self):
+        uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
+        launch_server = Pyro4.Proxy(uri_string)
+        try:
+            launch_server.is_running()
+            print "Is running is True"
+            return True
+        except:
+            print "Server not running"
+            return False
+
     def execute(self, app_descriptor_dict):
+        if not self.is_server_already_started():
+            self.start_gui_no_return(app_descriptor_dict)
+        else:
+            self.execute_in_remote(app_descriptor_dict)
+
+    def execute_in_remote(self, app_descriptor_dict):
+        pass
+
+    def execute_in_this_app(self, app_descriptor_dict):
         """
         Launch app in iconized mode
         :param app_descriptor_dict: example: {"testapp_id_for_later_killing": ["d:/testapp.bat"]}
@@ -54,7 +77,7 @@ class Iconizer(threading.Thread):
 
 
 def main():
-    Iconizer().start_gui_no_return({"testapp_id_for_later_killing": ["dir"]})
+    Iconizer().execute({"testapp_id_for_later_killing": ["dir"]})
 
 
 if __name__ == '__main__':

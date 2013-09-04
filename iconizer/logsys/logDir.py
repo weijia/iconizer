@@ -31,6 +31,9 @@ def ensure_dir(fullPath):
 
 class logDir:
     def __init__(self, logName, logRootPath, maxLogFile=10):
+        cwd = os.getcwd()
+        log_root = os.path.join(cwd, "logs")
+        ensure_dir(log_root)
         self.logName = logName.replace("\\", "_").replace("/", "_").replace(":", "_"). \
             replace("'", "").replace('"', "").replace("?", "").replace("*", "").replace(" ", "")
         self.logFullPath = os.path.join(logRootPath, self.logName)

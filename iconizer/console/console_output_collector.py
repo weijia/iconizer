@@ -82,7 +82,7 @@ class ConsoleOutputCollector:
         self.stopped = False
         self.log_root_path = log_root_path
 
-    def runConsoleApp(self, target, cwd, progAndParam):
+    def run_app_in_window(self, target, cwd, progAndParam):
         checkExistPath = progAndParam
         if type(checkExistPath) == list:
             checkExistPath = checkExistPath[0]

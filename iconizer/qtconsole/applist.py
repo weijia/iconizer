@@ -1,5 +1,5 @@
 from PyQt4.QtGui import QStandardItemModel
-from PyQtConsoleOutputWnd import MinimizeOnClose, ToggleMaxMin
+from pyqt_console_output_wnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
 from iconizer.qtconsole.notification import findFileInProduct
 

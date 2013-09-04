@@ -70,6 +70,12 @@ class Iconizer(threading.Thread):
             self.launch_server = Pyro4.Proxy(uri_string)
         return self.launch_server
 
+    def send_msg(self, msg):
+        """
+        Send command msg to GUI
+        """
+        pass
+
     def execute_in_this_app(self, app_descriptor_dict):
         """
         Launch app in iconized mode

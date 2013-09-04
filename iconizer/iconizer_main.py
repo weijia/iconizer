@@ -10,16 +10,17 @@ class Iconizer(threading.Thread):
     def __init__(self):
         super(Iconizer, self).__init__()
         self.launched_app_dict = {}
+        self.launch_server = None
 
     def start_gui_no_return(self, app_descriptor_dict={}):
         #Create windows
-        self.launcher = CrossGuiLauncher(PyQtGuiFactory())
+        self.gui_launch_manger = CrossGuiLauncher(PyQtGuiFactory())
         #Add closing callback, so when GUI was closing, Iconizer will got notified
-        self.launcher.add_close_listener(self.on_close)
+        self.gui_launch_manger.add_close_listener(self.on_close)
         #Start background thread running pyro service
         self.app_descriptor_dict = app_descriptor_dict
         self.start()
-        self.launcher.start_cross_gui_launcher_no_return()
+        self.gui_launch_manger.start_cross_gui_launcher_no_return()
 
     def run(self):
         self.start_initial_apps()
@@ -43,10 +44,8 @@ class Iconizer(threading.Thread):
         return True
 
     def is_server_already_started(self):
-        uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
-        launch_server = Pyro4.Proxy(uri_string)
         try:
-            launch_server.is_running()
+            self.get_launch_server().is_running()
             print "Is running is True"
             return True
         except:
@@ -60,16 +59,16 @@ class Iconizer(threading.Thread):
             self.execute_in_remote(app_descriptor_dict)
 
     def execute_in_remote(self, app_descriptor_dict):
-        uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
-        launch_server = Pyro4.Proxy(uri_string)
         try:
-            launch_server.is_running()
-            launch_server.execute_in_this_app(app_descriptor_dict)
-            print "Is running is True"
-            return True
+            self.get_launch_server().execute_in_this_app(app_descriptor_dict)
         except:
-            print "Server not running"
-            return False
+            print "Calling remote execute, but server not running"
+
+    def get_launch_server(self):
+        if self.launch_server is None:
+            uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
+            self.launch_server = Pyro4.Proxy(uri_string)
+        return self.launch_server
 
     def execute_in_this_app(self, app_descriptor_dict):
         """
@@ -80,7 +79,7 @@ class Iconizer(threading.Thread):
         #Send request to start a new app
         for key in app_descriptor_dict:
             self.launched_app_dict[key] = {
-                "collector": self.launcher.create_console_wnd_for_app(app_descriptor_dict[key]),
+                "collector": self.gui_launch_manger.create_console_wnd_for_app(app_descriptor_dict[key]),
                 "params": app_descriptor_dict[key],
             }
 

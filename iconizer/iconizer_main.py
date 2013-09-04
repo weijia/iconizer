@@ -60,7 +60,16 @@ class Iconizer(threading.Thread):
             self.execute_in_remote(app_descriptor_dict)
 
     def execute_in_remote(self, app_descriptor_dict):
-        pass
+        uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
+        launch_server = Pyro4.Proxy(uri_string)
+        try:
+            launch_server.is_running()
+            launch_server.execute_in_this_app(app_descriptor_dict)
+            print "Is running is True"
+            return True
+        except:
+            print "Server not running"
+            return False
 
     def execute_in_this_app(self, app_descriptor_dict):
         """

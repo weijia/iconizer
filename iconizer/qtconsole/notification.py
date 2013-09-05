@@ -1,22 +1,13 @@
 import os
 from PyQt4.QtGui import QStandardItemModel
+from iconizer.qtconsole.fileTools import find_resource_in_pkg
 from pyqt_console_output_wnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
-
-
-def findFileInProduct(filename):
-    p = os.getcwd()
-    for dirpath, dirnames, filenames in os.walk(p):
-        if filename in filenames:
-            #print 'find file:', os.path.join(dirpath, filename)
-            return os.path.join(dirpath, filename)
-    return None
-
 
 class Notification(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):
     def __init__(self):
         super(Notification, self).__init__()
-        ui_full_path = findFileInProduct('notification.ui')
+        ui_full_path = find_resource_in_pkg('notification.ui')
         self.ui = uic.loadUi(ui_full_path, self)
 
         #self.show()

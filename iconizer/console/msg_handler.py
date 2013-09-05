@@ -10,6 +10,7 @@ class GuiServiceMsgHandler(object):
 
     def handle_msg(self, msg):
         if msg["command"] == "launch":
+            print "apps: ", msg["apps"]
             self.gui_launch_manger.execute_inconized(msg["apps"])
         elif msg["command"] == "DropWnd":
             target = msg["target"]

@@ -32,7 +32,7 @@ setup(
         'iconizer.win',
         'iconizer.qtconsole',
     ],
-    package_data={'iconizer': ['qtconsole/*.ui']},
+    package_data={'iconizer': ['qtconsole/*.ui', 'qtconsole/*.png']},
     package_dir={'iconizer': 'iconizer'},
     include_package_data=True,
     install_requires=[

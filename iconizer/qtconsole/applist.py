@@ -1,13 +1,14 @@
 from PyQt4.QtGui import QStandardItemModel
 from pyqt_console_output_wnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
-from iconizer.qtconsole.notification import findFileInProduct
+from iconizer.qtconsole.notification import find_resource_in_pkg
 
 
 class ApplicationList(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):
     def __init__(self):
         super(ApplicationList, self).__init__()
-        ui_full_path = findFileInProduct('app_list.ui')
+        #ui_full_path = findFileInProduct('app_list.ui')
+        ui_full_path = find_resource_in_pkg('app_list.ui')
         self.ui = uic.loadUi(ui_full_path, self)
         self.model = QStandardItemModel()
 

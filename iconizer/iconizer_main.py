@@ -19,6 +19,7 @@ class Iconizer(threading.Thread):
         """
         Send command msg to GUI
         """
+        print "sending msg:", msg
         self.gui_launch_manger.send_msg(msg)
 
     def is_running(self):
@@ -47,7 +48,10 @@ class Iconizer(threading.Thread):
         self.start()
 
         #Execute app must be called in the main thread
-        self.gui_launch_manger.execute_inconized(self.app_descriptor_dict)
+        try:
+            self.gui_launch_manger.execute_inconized(self.app_descriptor_dict)
+        except:
+            pass
         self.gui_launch_manger.start_cross_gui_launcher_no_return()
 
     def execute_in_remote(self, app_descriptor_dict):

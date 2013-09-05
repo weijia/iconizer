@@ -3,7 +3,7 @@ from PyQt4.QtCore import  Qt
 from pyqt_console_output_wnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
 import sys
-from iconizer.qtconsole.notification import findFileInProduct
+from iconizer.qtconsole.notification import find_resource_in_pkg
 
 
 class DroppableMain(QtGui.QMainWindow):
@@ -33,7 +33,7 @@ class Droppable(QtGui.QWidget, Draggable):
 
     def __init__(self, wnd_color = None):
         super(Droppable, self).__init__()
-        ui_full_path = findFileInProduct('droppable.ui')
+        ui_full_path = find_resource_in_pkg('droppable.ui')
         self.ui = uic.loadUi(ui_full_path, self)
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint|QtCore.Qt.Tool|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
         self.setAcceptDrops(True)

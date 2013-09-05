@@ -118,6 +118,7 @@ class CrossGuiLauncher(object):
         """
         #Send request to start a new app
         for key in app_descriptor_dict:
+            print key, app_descriptor_dict[key]
             self.launched_app_dict[key] = {
                 "collector": self.create_console_wnd_for_app(app_descriptor_dict[key]),
                 "params": app_descriptor_dict[key],
@@ -128,6 +129,7 @@ class CrossGuiLauncher(object):
         Start an app with full path and parameters passed in a list
         param: [appFullPath, param1, param2, ...]
         """
+        print "launching: ", param
         l = logDir(os.path.basename(param[0]))
         child_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())
         log_collector = ConsoleOutputCollector()

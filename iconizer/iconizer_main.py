@@ -3,7 +3,7 @@
 import threading
 import Pyro4
 from iconizer.console.launcher import CrossGuiLauncher
-from iconizer.qtconsole.PyQtGuiFactory import PyQtGuiFactory
+from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 
 class Iconizer(threading.Thread):
@@ -14,7 +14,7 @@ class Iconizer(threading.Thread):
 
     def start_gui_no_return(self, app_descriptor_dict={}):
         #Create windows
-        self.gui_launch_manger = CrossGuiLauncher(PyQtGuiFactory())
+        self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
         #Add closing callback, so when GUI was closing, Iconizer will got notified
         self.gui_launch_manger.add_close_listener(self.on_close)
         #Start background thread running pyro service

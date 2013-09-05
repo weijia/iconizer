@@ -12,24 +12,51 @@ class Iconizer(threading.Thread):
         self.launched_app_dict = {}
         self.launch_server = None
 
+    #########################
+    # Called through pyro only
+    #########################
+    def send_msg(self, msg):
+        """
+        Send command msg to GUI
+        """
+        pass
+
+    def is_running(self):
+        return True
+
+    ######################
+    # External interface
+    ######################
+    def execute(self, app_descriptor_dict):
+        if not self.is_server_already_started():
+            self.start_gui_no_return(app_descriptor_dict)
+        else:
+            self.execute_in_remote(app_descriptor_dict)
+
+    ######################
+    # Internal functions
+    ######################
     def start_gui_no_return(self, app_descriptor_dict={}):
+        self.app_descriptor_dict = app_descriptor_dict
         #Create windows
         self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
         #Add closing callback, so when GUI was closing, Iconizer will got notified
-        self.gui_launch_manger.add_close_listener(self.on_close)
+        self.gui_launch_manger.add_final_close_listener(self.on_close)
+
         #Start background thread running pyro service
-        self.app_descriptor_dict = app_descriptor_dict
         self.start()
+
+        #Execute app must be called in the main thread
+        self.gui_launch_manger.execute_inconized(self.app_descriptor_dict)
         self.gui_launch_manger.start_cross_gui_launcher_no_return()
 
+    def execute_in_remote(self, app_descriptor_dict):
+        try:
+            self.get_launch_server().send_msg({"command": "launch", "apps": app_descriptor_dict})
+        except:
+            print "Calling remote execute, but server not running"
+
     def run(self):
-        self.start_initial_apps()
-        self.start_pyro_daemon()
-
-    def start_initial_apps(self):
-        self.execute_in_this_app(self.app_descriptor_dict)
-
-    def start_pyro_daemon(self):
         self.pyro_daemon = Pyro4.Daemon(port=8018)
         uri = self.pyro_daemon.register(self, "ufs_launcher")
         print "uri=", uri
@@ -40,9 +67,6 @@ class Iconizer(threading.Thread):
     def on_close(self):
         self.pyro_daemon.shutdown()
 
-    def is_running(self):
-        return True
-
     def is_server_already_started(self):
         try:
             self.get_launch_server().is_running()
@@ -52,42 +76,11 @@ class Iconizer(threading.Thread):
             print "Server not running"
             return False
 
-    def execute(self, app_descriptor_dict):
-        if not self.is_server_already_started():
-            self.start_gui_no_return(app_descriptor_dict)
-        else:
-            self.execute_in_remote(app_descriptor_dict)
-
-    def execute_in_remote(self, app_descriptor_dict):
-        try:
-            self.get_launch_server().execute_in_this_app(app_descriptor_dict)
-        except:
-            print "Calling remote execute, but server not running"
-
     def get_launch_server(self):
         if self.launch_server is None:
             uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
             self.launch_server = Pyro4.Proxy(uri_string)
         return self.launch_server
-
-    def send_msg(self, msg):
-        """
-        Send command msg to GUI
-        """
-        pass
-
-    def execute_in_this_app(self, app_descriptor_dict):
-        """
-        Launch app in iconized mode
-        :param app_descriptor_dict: example: {"testapp_id_for_later_killing": ["d:/testapp.bat"]}
-        :return: N/A
-        """
-        #Send request to start a new app
-        for key in app_descriptor_dict:
-            self.launched_app_dict[key] = {
-                "collector": self.gui_launch_manger.create_console_wnd_for_app(app_descriptor_dict[key]),
-                "params": app_descriptor_dict[key],
-            }
 
 
 def main():

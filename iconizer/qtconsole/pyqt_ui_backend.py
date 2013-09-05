@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-  
-from PyQtConsoleOutputWnd import PyQtConsoleOutputWnd
+from pyqt_console_output_wnd import PyQtConsoleOutputWnd
 import PyQt4.QtGui as QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import sys
-from TaskbarIcon import List2SystemTray, ConsoleManager
+from pyqt_taskbar_icon import List2SystemTray, ConsoleManager
 from PyQt4 import QtCore
 import fileTools
 from droppable import Droppable
@@ -12,7 +12,7 @@ from browser import Browser
 from iconizer.console.gui_factory_base import GuiFactoryBase
 
 
-class PyQtGuiFactory(QtCore.QObject, GuiFactoryBase):
+class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     """
     We must inherit QObject to have pyqtSignal declared here. And QObject.__init__ should also be called.
     See http://stackoverflow.com/questions/2970312/pyqt4-qtcore-pyqtsignal-object-has-no-attribute-connect
@@ -20,7 +20,7 @@ class PyQtGuiFactory(QtCore.QObject, GuiFactoryBase):
     gui_signal = QtCore.pyqtSignal(object)
 
     def __init__(self):
-        super(PyQtGuiFactory, self).__init__()
+        super(PyQtGuiBackend, self).__init__()
         self.app = QtGui.QApplication(sys.argv)
         self.droppable_list = []
         self.browser_list = {}

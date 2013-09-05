@@ -1,16 +1,16 @@
 
 class GuiServiceMsgHandler(object):
-    def __init__(self, launcher):
+    def __init__(self, gui_launch_manger):
         super(GuiServiceMsgHandler, self).__init__()
-        self.launcher = launcher
-        self.gui_factory = launcher.gui_factory
+        self.gui_launch_manger = gui_launch_manger
+        self.gui_factory = gui_launch_manger.gui_factory
         self.wnd2target = {}
         self.target2wnd = {}
         self.handle2browser = {}
 
     def handle_msg(self, msg):
-        if msg["command"] == "Launch":
-            self.launcher.execute_inconized(msg["apps"])
+        if msg["command"] == "launch":
+            self.gui_launch_manger.execute_inconized(msg["apps"])
         elif msg["command"] == "DropWnd":
             target = msg["target"]
             tip = msg.get("tip", None)

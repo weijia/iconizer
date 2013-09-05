@@ -19,7 +19,7 @@ class Iconizer(threading.Thread):
         """
         Send command msg to GUI
         """
-        pass
+        self.gui_launch_manger.send_msg(msg)
 
     def is_running(self):
         return True

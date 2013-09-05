@@ -15,6 +15,7 @@ class CrossGuiLauncher(object):
     to app id string if app path and param is identical for 2 running app. such as startBeanstalkd.bat and
     startBeanstalkd.bat-1.
     """
+
     def __init__(self, gui_factory):
         """
         * Create taskbar menu
@@ -38,8 +39,6 @@ class CrossGuiLauncher(object):
         self.launched_app_dict = {}
         self.final_close_handlers = []
 
-
-
     #####################################
     # Callbacks
     #####################################
@@ -56,7 +55,7 @@ class CrossGuiLauncher(object):
         #print 'selected: ', app_id
         minimized = self.app_id_str_to_console_wnd[app_id_str].toggle()
         self.app_list_ui_for_app_id_str_to_app_wnd_state[app_id_str] = {"checked": not minimized,
-                                                                             "action": self.on_app_item_selected}
+                                                                        "action": self.on_app_item_selected}
 
     def on_quit_clicked(self):
         #self.window.hide()
@@ -151,14 +150,14 @@ class CrossGuiLauncher(object):
         #self.app_name_to_collector[app_path_and_param_gen_str] = collector
         self.log_collector_to_menu_item_dict[log_collector] = child_wnd
         #self.taskbar_icon_app[app_path_and_param_gen_str] = self.on_app_item_selected
-        self.app_list_ui_for_app_id_str_to_app_wnd_state[app_path_and_param_gen_str] = {"checked": False, "action": self.on_app_item_selected}
+        self.app_list_ui_for_app_id_str_to_app_wnd_state[app_path_and_param_gen_str] = {"checked": False,
+                                                                                        "action": self.on_app_item_selected}
         return log_collector
-
-
 
 
 def main():
     from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
+
     CrossGuiLauncher(PyQtGuiBackend()).start_cross_gui_launcher_no_return()
 
 

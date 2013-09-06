@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import threading
+import traceback
 import Pyro4
 from iconizer.console.launcher import CrossGuiLauncher
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
@@ -11,6 +12,7 @@ class Iconizer(threading.Thread):
         super(Iconizer, self).__init__()
         self.launched_app_dict = {}
         self.launch_server = None
+        self.close_callback_list = []
 
     #########################
     # Called through pyro only
@@ -34,6 +36,8 @@ class Iconizer(threading.Thread):
         else:
             self.execute_in_remote(app_descriptor_dict)
 
+    def add_close_listener(self, close_callback):
+        self.close_callback_list.append(close_callback)
     ######################
     # Internal functions
     ######################
@@ -69,6 +73,11 @@ class Iconizer(threading.Thread):
         self.pyro_daemon.requestLoop()
 
     def on_close(self):
+        for callback in self.close_callback_list:
+            try:
+                callback()
+            except:
+                traceback.print_exc()
         self.pyro_daemon.shutdown()
 
     def is_server_already_started(self):

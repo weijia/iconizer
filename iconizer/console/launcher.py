@@ -60,7 +60,7 @@ class CrossGuiLauncher(object):
     def on_quit_clicked(self):
         #self.window.hide()
         #self.icon.set_visible(False)
-        print 'on_quit_clicked, send KeyInterrupts to apps'
+        #print 'on_quit_clicked, send KeyInterrupts to apps'
 
         print 'wait for 10 seconds'
         #Use gui factory method, so UI will not be blocked

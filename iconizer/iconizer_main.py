@@ -13,6 +13,8 @@ class Iconizer(threading.Thread):
         self.launched_app_dict = {}
         self.launch_server = None
         self.close_callback_list = []
+        #Create windows
+        self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
 
     #########################
     # Called through pyro only
@@ -43,8 +45,7 @@ class Iconizer(threading.Thread):
     ######################
     def start_gui_no_return(self, app_descriptor_dict={}):
         self.app_descriptor_dict = app_descriptor_dict
-        #Create windows
-        self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
+
         #Add closing callback, so when GUI was closing, Iconizer will got notified
         self.gui_launch_manger.add_final_close_listener(self.on_close)
 

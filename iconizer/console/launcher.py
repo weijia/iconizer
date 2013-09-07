@@ -9,6 +9,17 @@ from msg_handler import GuiServiceMsgHandler
 #import time
 
 
+def call_function_no_exception(func, *args):
+    try:
+        func(*args)
+    except:
+        traceback.print_exc()    
+
+def call_callbacks_in_list_no_exception(callback_list):
+    for callback_func in callback_list:
+        call_function_no_exception(callback_func)
+
+
 class CrossGuiLauncher(object):
     """
     In this class, app id string is a string generated from app's path and param, and a number will be added
@@ -24,8 +35,6 @@ class CrossGuiLauncher(object):
         self.gui_factory = gui_factory
         self.taskbar_icon_app = self.gui_factory.create_taskbar_icon_app()
         self.app_list_ui_for_app_id_str_to_app_wnd_state = self.gui_factory.get_app_list()
-        self.taskbar_icon_app["Show/Hide"] = self.app_list_ui_for_app_id_str_to_app_wnd_state.app_list.toggle
-        self.taskbar_icon_app["Exit"] = self.on_quit_clicked
 
         super(CrossGuiLauncher, self).__init__()
         self.app_id_str_to_console_wnd = {}
@@ -37,7 +46,10 @@ class CrossGuiLauncher(object):
 
         self.gui_factory.set_msg_callback(self.on_msg)
         self.launched_app_dict = {}
-        self.final_close_handlers = []
+        #Called when user requesting closing app
+        self.close_callback_list = []
+        #Called when app notified all sub process before app will really quit
+        self.final_close_callback_list = []
 
     #####################################
     # Callbacks
@@ -61,6 +73,7 @@ class CrossGuiLauncher(object):
         #self.window.hide()
         #self.icon.set_visible(False)
         #print 'on_quit_clicked, send KeyInterrupts to apps'
+        call_callbacks_in_list_no_exception(self.close_callback_list)
 
         print 'wait for 10 seconds'
         #Use gui factory method, so UI will not be blocked
@@ -69,9 +82,6 @@ class CrossGuiLauncher(object):
     #######################
     # External callable functions
     #######################
-    def add_final_close_listener(self, callback):
-        self.final_close_handlers.append(callback)
-
     def send_msg(self, msg):
         """
         Send message to GUI thread, so it will be handled in GUI thread
@@ -81,6 +91,8 @@ class CrossGuiLauncher(object):
         self.gui_factory.trigger(msg)
 
     def start_cross_gui_launcher_no_return(self):
+        self.taskbar_icon_app["Show/Hide"] = self.app_list_ui_for_app_id_str_to_app_wnd_state.app_list.toggle
+        self.taskbar_icon_app["Exit"] = self.on_quit_clicked
         self.gui_factory.start_msg_loop()
 
     ###############################
@@ -93,16 +105,8 @@ class CrossGuiLauncher(object):
 
         print "before factory exit"
         self.gui_factory.exit()
-        print "calling final close handler"
-        self.call_final_close_handlers()
-
-    def call_final_close_handlers(self):
-        for handler in self.final_close_handlers:
-            try:
-                handler()
-            except:
-                #Exceptions raised by handlers will prevent iconizer from quitting, so ignore these exceptions
-                traceback.print_exc()
+        print "calling final close handlers"
+        call_callbacks_in_list_no_exception(self.final_close_callback_list)
 
     def on_msg(self, data):
         self.msg_handler.handle_msg(data)

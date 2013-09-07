@@ -3,16 +3,15 @@
 import threading
 import traceback
 import Pyro4
-from iconizer.console.launcher import CrossGuiLauncher
+from iconizer.console.launcher import CrossGuiLauncher, call_function_no_exception, call_callbacks_in_list_no_exception
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 
 class Iconizer(threading.Thread):
     def __init__(self):
         super(Iconizer, self).__init__()
-        self.launched_app_dict = {}
+        #self.launched_app_dict = {}
         self.launch_server = None
-        self.close_callback_list = []
         #Create windows
         self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
 
@@ -38,8 +37,12 @@ class Iconizer(threading.Thread):
         else:
             self.execute_in_remote(app_descriptor_dict)
 
+    def add_final_close_listener(self, final_close_callback):
+        self.gui_launch_manger.final_close_callback_list.append(final_close_callback)
+        
     def add_close_listener(self, close_callback):
-        self.close_callback_list.append(close_callback)
+        self.gui_launch_manger.close_callback_list.append(close_callback)
+        
     ######################
     # Internal functions
     ######################
@@ -47,16 +50,13 @@ class Iconizer(threading.Thread):
         self.app_descriptor_dict = app_descriptor_dict
 
         #Add closing callback, so when GUI was closing, Iconizer will got notified
-        self.gui_launch_manger.add_final_close_listener(self.on_close)
+        self.add_final_close_listener(self.on_final_close)
 
         #Start background thread running pyro service
         self.start()
-
+        
         #Execute app must be called in the main thread
-        try:
-            self.gui_launch_manger.execute_inconized(self.app_descriptor_dict)
-        except:
-            pass
+        call_function_no_exception(self.gui_launch_manger.execute_inconized, self.app_descriptor_dict)
         self.gui_launch_manger.start_cross_gui_launcher_no_return()
 
     def execute_in_remote(self, app_descriptor_dict):
@@ -69,18 +69,11 @@ class Iconizer(threading.Thread):
         self.pyro_daemon = Pyro4.Daemon(port=8018)
         uri = self.pyro_daemon.register(self, "ufs_launcher")
         print "uri=", uri
-        #self.pyro_daemon.requestLoop(loopCondition=lambda: not self.must_shutdown)
-        #Pyro4.config.COMMTIMEOUT=3.5
         self.pyro_daemon.requestLoop()
-
-    def on_close(self):
-        for callback in self.close_callback_list:
-            try:
-                callback()
-            except:
-                traceback.print_exc()
+        
+    def on_final_close(self):
         self.pyro_daemon.shutdown()
-
+        
     def is_server_already_started(self):
         try:
             self.get_launch_server().is_running()

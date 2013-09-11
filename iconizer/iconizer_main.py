@@ -13,7 +13,7 @@ class Iconizer(threading.Thread):
         #self.launched_app_dict = {}
         self.launch_server = None
         #Create windows
-        self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
+        self.gui_launch_manger = None
 
     #########################
     # Called through pyro only
@@ -23,7 +23,7 @@ class Iconizer(threading.Thread):
         Send command msg to GUI
         """
         print "sending msg:", msg
-        self.gui_launch_manger.send_msg(msg)
+        self.get_gui_launch_manager().send_msg(msg)
 
     def is_running(self):
         return True
@@ -36,16 +36,23 @@ class Iconizer(threading.Thread):
             self.start_gui_no_return(app_descriptor_dict)
         else:
             self.execute_in_remote(app_descriptor_dict)
+            
+
 
     def add_final_close_listener(self, final_close_callback):
-        self.gui_launch_manger.final_close_callback_list.append(final_close_callback)
+        self.get_gui_launch_manager().final_close_callback_list.append(final_close_callback)
         
     def add_close_listener(self, close_callback):
-        self.gui_launch_manger.close_callback_list.append(close_callback)
+        self.get_gui_launch_manager().close_callback_list.append(close_callback)
         
     ######################
     # Internal functions
     ######################
+    def get_gui_launch_manager(self):
+        if self.gui_launch_manger is None:
+            self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend())
+        return self.gui_launch_manger
+        
     def start_gui_no_return(self, app_descriptor_dict={}):
         self.app_descriptor_dict = app_descriptor_dict
 
@@ -56,8 +63,8 @@ class Iconizer(threading.Thread):
         self.start()
         
         #Execute app must be called in the main thread
-        call_function_no_exception(self.gui_launch_manger.execute_inconized, self.app_descriptor_dict)
-        self.gui_launch_manger.start_cross_gui_launcher_no_return()
+        call_function_no_exception(self.get_gui_launch_manager().execute_inconized, self.app_descriptor_dict)
+        self.get_gui_launch_manager().start_cross_gui_launcher_no_return()
 
     def execute_in_remote(self, app_descriptor_dict):
         try:

@@ -27,7 +27,7 @@ class CrossGuiLauncher(object):
     startBeanstalkd.bat-1.
     """
 
-    def __init__(self, gui_factory):
+    def __init__(self, gui_factory, log_dir=None):
         """
         * Create taskbar menu
         """
@@ -50,6 +50,7 @@ class CrossGuiLauncher(object):
         self.close_callback_list = []
         #Called when app notified all sub process before app will really quit
         self.final_close_callback_list = []
+        self.log_dir = log_dir
 
     #####################################
     # Callbacks
@@ -134,7 +135,10 @@ class CrossGuiLauncher(object):
         param: [appFullPath, param1, param2, ...]
         """
         print "launching: ", param
-        l = logDir(os.path.basename(param[0]))
+        if self.log_dir is None:
+            l = logDir(os.path.basename(param[0]))
+        else:
+            l = logDir(self.log_dir)
         child_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())
         log_collector = ConsoleOutputCollector()
         cwd = os.getcwd()

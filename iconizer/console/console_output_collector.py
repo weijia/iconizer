@@ -164,12 +164,14 @@ class ConsoleOutputCollector:
                 #print 'taskid:%d, pid:%d'%(int(p._handle), int(p.pid))
 
             log_path_base_name = os.path.basename(app_or_script_path_and_param_list[0])# + str(app_or_script_path_and_param_list[1:])
-            normal_log_path = logDir.logDir(log_path_base_name + "_normal")
-            err_log_path = logDir.logDir(log_path_base_name + "_error")
-            thr1 = ConsoleCollectWorkerThread(target, p.stdout, app_or_script_path_and_param_list[0], False, normal_log_path.getLogFilePath())
+            normal_log_path = logDir.logDir(log_path_base_name + "_normal", self.log_root_path)
+            err_log_path = logDir.logDir(log_path_base_name + "_error", self.log_root_path)
+            thr1 = ConsoleCollectWorkerThread(target, p.stdout, app_or_script_path_and_param_list[0],
+                                              False, normal_log_path.getLogFilePath())
             thr1.start()
             self.log_collector_thread_list.append(thr1)
-            thr2 = ConsoleCollectWorkerThread(target, p.stderr, app_or_script_path_and_param_list[0], True, err_log_path.getLogFilePath())
+            thr2 = ConsoleCollectWorkerThread(target, p.stderr, app_or_script_path_and_param_list[0],
+                                              True, err_log_path.getLogFilePath())
             thr2.start()
             self.log_collector_thread_list.append(thr2)
             #print 'launch ok'

@@ -135,12 +135,9 @@ class CrossGuiLauncher(object):
         param: [appFullPath, param1, param2, ...]
         """
         print "launching: ", param
-        if self.log_dir is None:
-            l = logDir(os.path.basename(param[0]))
-        else:
-            l = logDir(self.log_dir)
+        l = logDir(os.path.basename(param[0]), self.log_dir)
         child_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())
-        log_collector = ConsoleOutputCollector()
+        log_collector = ConsoleOutputCollector(l.getLogFilePath())
         cwd = os.getcwd()
         log_collector.run_app_in_window(child_wnd, cwd, param)
         self.wnd_to_console_dict[child_wnd] = log_collector

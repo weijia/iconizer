@@ -14,7 +14,7 @@ class Iconizer(threading.Thread):
         self.launch_server = None
         #Create windows
         self.gui_launch_manger = None
-        self.log_dir=None
+        self.log_dir=log_dir
 
     #########################
     # Called through pyro only

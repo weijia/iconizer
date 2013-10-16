@@ -14,7 +14,7 @@ class Iconizer(threading.Thread):
         self.launch_server = None
         #Create windows
         self.gui_launch_manger = None
-        self.log_dir=log_dir
+        self.log_dir = log_dir
 
     #########################
     # Called through pyro only
@@ -37,15 +37,14 @@ class Iconizer(threading.Thread):
             self.start_gui_no_return(app_descriptor_dict)
         else:
             self.execute_in_remote(app_descriptor_dict)
-            
 
 
     def add_final_close_listener(self, final_close_callback):
         self.get_gui_launch_manager().final_close_callback_list.append(final_close_callback)
-        
+
     def add_close_listener(self, close_callback):
         self.get_gui_launch_manager().close_callback_list.append(close_callback)
-        
+
     ######################
     # Internal functions
     ######################
@@ -53,7 +52,7 @@ class Iconizer(threading.Thread):
         if self.gui_launch_manger is None:
             self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend(), self.log_dir)
         return self.gui_launch_manger
-        
+
     def start_gui_no_return(self, app_descriptor_dict={}):
         self.app_descriptor_dict = app_descriptor_dict
 
@@ -62,7 +61,7 @@ class Iconizer(threading.Thread):
 
         #Start background thread running pyro service
         self.start()
-        
+
         #Execute app must be called in the main thread
         call_function_no_exception(self.get_gui_launch_manager().execute_inconized, self.app_descriptor_dict)
         self.get_gui_launch_manager().start_cross_gui_launcher_no_return()
@@ -78,10 +77,10 @@ class Iconizer(threading.Thread):
         uri = self.pyro_daemon.register(self, "ufs_launcher")
         print "uri=", uri
         self.pyro_daemon.requestLoop()
-        
+
     def on_final_close(self):
         self.pyro_daemon.shutdown()
-        
+
     def is_server_already_started(self):
         try:
             self.get_launch_server().is_running()

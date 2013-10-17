@@ -4,6 +4,7 @@ import threading
 import traceback
 import Pyro4
 from iconizer.console.launcher import CrossGuiLauncher, call_function_no_exception, call_callbacks_in_list_no_exception
+from iconizer.nameserver import NameServerInThread
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 
@@ -15,6 +16,8 @@ class Iconizer(threading.Thread):
         #Create windows
         self.gui_launch_manger = None
         self.log_dir = log_dir
+        self.name_server = NameServerInThread()
+        self.name_server.start()
 
     #########################
     # Called through pyro only
@@ -75,11 +78,16 @@ class Iconizer(threading.Thread):
     def run(self):
         self.pyro_daemon = Pyro4.Daemon(port=8018)
         uri = self.pyro_daemon.register(self, "ufs_launcher")
+        ns = Pyro4.locateNS()
+        ns.register("ufs_launcher", uri)
         print "uri=", uri
         self.pyro_daemon.requestLoop()
 
     def on_final_close(self):
+        print 'shutting down daemon'
         self.pyro_daemon.shutdown()
+        print 'shutting down name server'
+        self.name_server.shutdown()
 
     def is_server_already_started(self):
         try:

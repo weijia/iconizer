@@ -71,7 +71,7 @@ class Iconizer(threading.Thread):
 
     def execute_in_remote(self, app_descriptor_dict):
         try:
-            self.get_launch_server().send_msg({"command": "launch", "apps": app_descriptor_dict})
+            self.send_msg({"command": "launch", "apps": app_descriptor_dict})
         except:
             print "Calling remote execute, but server not running"
 

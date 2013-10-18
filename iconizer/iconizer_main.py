@@ -17,7 +17,6 @@ class Iconizer(threading.Thread):
         self.gui_launch_manger = None
         self.log_dir = log_dir
         self.name_server = NameServerInThread()
-        self.name_server.start()
 
     #########################
     # Called through pyro only
@@ -37,10 +36,10 @@ class Iconizer(threading.Thread):
     ######################
     def execute(self, app_descriptor_dict):
         if not self.is_server_already_started():
+            self.name_server.start()
             self.start_gui_no_return(app_descriptor_dict)
         else:
             self.execute_in_remote(app_descriptor_dict)
-
 
     def add_final_close_listener(self, final_close_callback):
         self.get_gui_launch_manager().final_close_callback_list.append(final_close_callback)
@@ -57,8 +56,6 @@ class Iconizer(threading.Thread):
         return self.gui_launch_manger
 
     def start_gui_no_return(self, app_descriptor_dict={}):
-        self.app_descriptor_dict = app_descriptor_dict
-
         #Add closing callback, so when GUI was closing, Iconizer will got notified
         self.add_final_close_listener(self.on_final_close)
 
@@ -66,7 +63,7 @@ class Iconizer(threading.Thread):
         self.start()
 
         #Execute app must be called in the main thread
-        call_function_no_exception(self.get_gui_launch_manager().execute_inconized, self.app_descriptor_dict)
+        call_function_no_exception(self.get_gui_launch_manager().execute_inconized, app_descriptor_dict)
         self.get_gui_launch_manager().start_cross_gui_launcher_no_return()
 
     def execute_in_remote(self, app_descriptor_dict):

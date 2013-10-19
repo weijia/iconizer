@@ -48,7 +48,7 @@ class GuiServiceMsgHandler(object):
         #target_queue = beanstalkServiceBase(target)
         if not (self.gui_launch_manger.msg_service is None):
             try:
-                self.gui_launch_manger.sendto(target, {"command": "dropped", "urls": urls})
+                self.gui_launch_manger.msg_service.sendto(target, {"command": "dropped", "urls": urls})
             except:
                 import traceback
                 traceback.print_exc()

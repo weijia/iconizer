@@ -9,14 +9,15 @@ from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 
 class Iconizer(threading.Thread):
-    def __init__(self, log_dir=None):
+    def __init__(self, log_dir=None, msg_service=None):
         super(Iconizer, self).__init__()
         #self.launched_app_dict = {}
         self.launch_server = None
         #Create windows
         self.gui_launch_manger = None
         self.log_dir = log_dir
-        self.name_server = NameServerInThread()
+        self.name_server = None
+        self.msg_service = msg_service
 
     #########################
     # Called through pyro only
@@ -36,6 +37,7 @@ class Iconizer(threading.Thread):
     ######################
     def execute(self, app_descriptor_dict):
         if not self.is_server_already_started():
+            self.name_server = NameServerInThread()
             self.name_server.start()
             self.start_gui_no_return(app_descriptor_dict)
         else:
@@ -52,7 +54,7 @@ class Iconizer(threading.Thread):
     ######################
     def get_gui_launch_manager(self):
         if self.gui_launch_manger is None:
-            self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend(), self.log_dir)
+            self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend(), self.log_dir, self.msg_service)
         return self.gui_launch_manger
 
     def start_gui_no_return(self, app_descriptor_dict={}):
@@ -68,7 +70,7 @@ class Iconizer(threading.Thread):
 
     def execute_in_remote(self, app_descriptor_dict):
         try:
-            self.send_msg({"command": "launch", "apps": app_descriptor_dict})
+            self.get_launch_server().send_msg({"command": "launch", "apps": app_descriptor_dict})
         except:
             print "Calling remote execute, but server not running"
 
@@ -84,7 +86,9 @@ class Iconizer(threading.Thread):
         print 'shutting down daemon'
         self.pyro_daemon.shutdown()
         print 'shutting down name server'
-        self.name_server.shutdown()
+        if not (self.name_server is None):
+            self.name_server.shutdown()
+        print 'name server shut down done'
 
     def is_server_already_started(self):
         try:

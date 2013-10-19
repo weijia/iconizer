@@ -15,6 +15,7 @@ def call_function_no_exception(func, *args):
     except:
         traceback.print_exc()    
 
+
 def call_callbacks_in_list_no_exception(callback_list):
     for callback_func in callback_list:
         call_function_no_exception(callback_func)
@@ -27,7 +28,7 @@ class CrossGuiLauncher(object):
     startBeanstalkd.bat-1.
     """
 
-    def __init__(self, gui_factory, log_dir=None):
+    def __init__(self, gui_factory, log_dir=None, msg_service=None):
         """
         * Create taskbar menu
         """
@@ -51,6 +52,7 @@ class CrossGuiLauncher(object):
         #Called when app notified all sub process before app will really quit
         self.final_close_callback_list = []
         self.log_dir = log_dir
+        self.msg_service = msg_service
 
     #####################################
     # Callbacks

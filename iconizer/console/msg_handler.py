@@ -1,3 +1,7 @@
+import json
+import Pyro4
+import beanstalkc
+
 
 class GuiServiceMsgHandler(object):
     def __init__(self, gui_launch_manger):
@@ -36,3 +40,28 @@ class GuiServiceMsgHandler(object):
         elif msg["command"] == "notify":
             msg_str = msg["msg"]
             self.gui_factory.msg(msg_str)
+
+    def drop_callback(self, drop_wnd, urls):
+        #print "dropped: ", urls
+        #print drop_wnd, self.wnd2target
+        target = self.wnd2target[drop_wnd]
+        #target_queue = beanstalkServiceBase(target)
+        if not (self.gui_launch_manger.msg_service is None):
+            try:
+                self.gui_launch_manger.sendto(target, {"command": "dropped", "urls": urls})
+            except:
+                import traceback
+                traceback.print_exc()
+        #try:
+        #    name_server = Pyro4.locateNS()
+        #    proxy_uri = name_server.lookup(target)
+        #    proxy = Pyro4.Proxy(proxy_uri)
+        #    proxy.send_msg({"command": "dropped", "urls": urls})
+        #except:
+        #    import traceback
+        #    traceback.print_exc()
+        ############################
+        #beanstalk_server_host = '127.0.0.1'
+        #beanstalk_server_port = 8212
+        #beanstalk = beanstalkc.Connection(host=beanstalk_server_host, port=beanstalk_server_port)
+        #beanstalk.put(json.dumps({"command": "dropped", "urls": urls}))

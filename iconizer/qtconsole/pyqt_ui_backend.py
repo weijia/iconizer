@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-  
+# -*- coding: utf-8 -*-
+from iconizer.qtconsole.applist import ItemToActionDictInListUi
 from pyqt_console_output_wnd import PyQtConsoleOutputWnd
 import PyQt4.QtGui as QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import sys
-from pyqt_taskbar_icon import List2SystemTray, ConsoleManager
+from pyqt_taskbar_icon import List2SystemTray
 from PyQt4 import QtCore
 import fileTools
 from droppable import Droppable
@@ -22,10 +23,14 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     def __init__(self):
         super(PyQtGuiBackend, self).__init__()
         self.app = QtGui.QApplication(sys.argv)
-        self.droppable_list = []
+        self.dropable_list = []
         self.browser_list = {}
         self.gui_signal.connect(self.msg_callback)
         self.gui_signal_callback = None
+        self.console_manager = None
+        self.ctimer = None
+        self.tray_icon = None
+        self.root_widget = None
 
     ################################################
     #Msg related functions
@@ -44,11 +49,11 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     ################################################
     #GUI related
     def create_taskbar_icon_app(self):
-        self.w = QtGui.QWidget()
+        self.root_widget = QtGui.QWidget()
         icon_full_path = fileTools.find_resource_in_pkg("gf-16x16.png")
-        self.trayIcon = List2SystemTray(QtGui.QIcon(icon_full_path), self.w)
-        #self.trayIcon["Example"] = exampleAction
-        return self.trayIcon
+        self.tray_icon = List2SystemTray(QtGui.QIcon(icon_full_path), self.root_widget)
+        #self.tray_icon["Example"] = exampleAction
+        return self.tray_icon
 
     def create_console_output_wnd(self, parent, logFilePath=None):
         return PyQtConsoleOutputWnd(parent, logFilePath)
@@ -67,7 +72,8 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
         QtGui.QApplication.quit()
 
     def get_app_list(self):
-        self.console_manager = ConsoleManager()
+        if self.console_manager is None:
+            self.console_manager = ItemToActionDictInListUi()
         return self.console_manager
 
     def create_drop_target(self, callback):
@@ -83,7 +89,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
 
     def show_browser(self, handle, url):
         #when calling load, url will be quoted? Seems yes.
-        if self.browser_list.has_key(handle):
+        if handle in self.browser_list:
             self.browser_list[handle].load(QUrl(url))
             self.browser_list[handle].show()
             self.browser_list[handle].raise_()
@@ -104,4 +110,4 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
             #objWebSettings.setDefaultTextEncoding("gbk");
 
     def msg(self, msg):
-        self.trayIcon.msg(msg)
+        self.tray_icon.msg(msg)

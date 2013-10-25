@@ -1,6 +1,6 @@
 import sys
 from PyQt4 import QtGui
-from iconizer.qtconsole.applist import ItemToActionDictInListUi
+from iconizer.qtconsole.list_window import ItemToActionDictInListUi
 from notification import Notification
 
 
@@ -54,7 +54,7 @@ def main():
     tray_icon = List2SystemTray(QtGui.QIcon("gf-16x16.png"), w)
     console_man = ItemToActionDictInListUi()
     console_man["Good"] = {"checked": True, "action": None}
-    tray_icon["Applications"] = console_man.show_app_list
+    tray_icon["Applications"] = console_man.show
     tray_icon["Exit"] = QtGui.QApplication.quit
     sys.exit(app.exec_())
 

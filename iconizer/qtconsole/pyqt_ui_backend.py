@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from iconizer.qtconsole.applist import ItemToActionDictInListUi
-from pyqt_console_output_wnd import PyQtConsoleOutputWnd
+from iconizer.qtconsole.list_window import ItemToActionDictInListUi
+from pyqt_console_output_wnd import PyQtConsoleOutputWnd, MinimizeOnClose, ToggleMaxMin
 import PyQt4.QtGui as QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -11,6 +11,10 @@ import fileTools
 from droppable import Droppable
 from browser import Browser
 from iconizer.console.gui_factory_base import GuiFactoryBase
+
+
+class ConsoleManager(ItemToActionDictInListUi, MinimizeOnClose, ToggleMaxMin):
+    pass
 
 
 class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
@@ -73,7 +77,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
 
     def get_app_list(self):
         if self.console_manager is None:
-            self.console_manager = ItemToActionDictInListUi()
+            self.console_manager = ConsoleManager()
         return self.console_manager
 
     def create_drop_target(self, callback):

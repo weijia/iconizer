@@ -6,11 +6,11 @@ from PyQt4 import QtCore, QtGui, uic
 from iconizer.qtconsole.notification import find_resource_in_pkg
 
 
-class ListViewWindow(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):
+class ListViewWindow(QtGui.QWidget):
     def __init__(self):
         super(ListViewWindow, self).__init__()
-        #ui_full_path = findFileInProduct('app_list.ui')
-        ui_full_path = find_resource_in_pkg('app_list.ui')
+        #ui_full_path = findFileInProduct('ui_widget.ui')
+        ui_full_path = find_resource_in_pkg('ui_widget.ui')
         self.ui = uic.loadUi(ui_full_path, self)
         self.model = QStandardItemModel()
 
@@ -35,33 +35,31 @@ class ItemToActionDictInListUi(UserDict.DictMixin):
     callback_func will accept the key as param
     """
     def __init__(self):
-        self.app_list = ListViewWindow()
-        self.app_list.set_click_handler(self.item_click_callback)
+        self.ui_widget = ListViewWindow()
+        self.ui_widget.set_click_handler(self.item_click_callback)
         self.item_to_action_dict = {}
         self.item_dict = {}
         self.key2item = {}
-        #self.app_list.show()
+        #self.ui_widget.show()
 
-    def show_app_list(self):
-        self.app_list.show()
+    def show(self):
+        self.ui_widget.show()
 
-    def new_item(self, key):
-        item = QStandardItem(key)
-        item.setCheckable(True)
-        #item.setCheckable(value["checked"])
-        self.app_list.model.appendRow(item)
-        return item
+    def new_ui_item(self, key):
+        ui_item = QStandardItem(key)
+        ui_item.setCheckable(True)
+        self.ui_widget.model.appendRow(ui_item)
+        return ui_item
 
     def __setitem__(self, key, value):
         #item = self.item_dict.get(key, self.new_item(key))
 
         if key in self.item_dict:
             item = self.key2item[key]
-            #item.setCheckable(value["checked"])
         else:
-            item = self.new_item(key)
+            item = self.new_ui_item(key)
 
-        if value["checked"]:
+        if ("checked" in value) and (value["checked"]):
             item.setCheckState(Qt.Checked)
         else:
             item.setCheckState(Qt.Unchecked)

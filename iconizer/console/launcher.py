@@ -94,7 +94,7 @@ class CrossGuiLauncher(object):
         self.gui_factory.trigger(msg)
 
     def start_cross_gui_launcher_no_return(self):
-        self.taskbar_icon_app["Show/Hide"] = self.app_list_ui_for_app_id_str_to_app_wnd_state.app_list.toggle
+        self.taskbar_icon_app["Show/Hide"] = self.app_list_ui_for_app_id_str_to_app_wnd_state.ui_widget.toggle
         self.taskbar_icon_app["Exit"] = self.on_quit_clicked
         self.gui_factory.start_msg_loop()
 

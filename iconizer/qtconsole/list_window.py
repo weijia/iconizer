@@ -9,8 +9,8 @@ from iconizer.qtconsole.notification import find_resource_in_pkg
 class ListViewWindow(QtGui.QWidget):
     def __init__(self):
         super(ListViewWindow, self).__init__()
-        #ui_full_path = findFileInProduct('ui_widget.ui')
-        ui_full_path = find_resource_in_pkg('ui_widget.ui')
+        #ui_full_path = findFileInProduct('list_ui_widget.ui')
+        ui_full_path = find_resource_in_pkg('list_window.ui')
         self.ui = uic.loadUi(ui_full_path, self)
         self.model = QStandardItemModel()
 
@@ -29,13 +29,17 @@ class ListViewWindow(QtGui.QWidget):
         self.click_handler = callback_func
 
 
+class ListDialog(ListViewWindow, MinimizeOnClose, ToggleMaxMin):
+    pass
+
+
 class ItemToActionDictInListUi(UserDict.DictMixin):
     """
     Manage items in dict way. key is the item text, value is a dict: {"checked": True, "action": callback_func}
     callback_func will accept the key as param
     """
-    def __init__(self):
-        self.ui_widget = ListViewWindow()
+    def __init__(self, list_window_class=ListDialog):
+        self.ui_widget = list_window_class()
         self.ui_widget.set_click_handler(self.item_click_callback)
         self.item_to_action_dict = {}
         self.item_dict = {}

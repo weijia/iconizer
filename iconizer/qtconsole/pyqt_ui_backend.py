@@ -13,10 +13,6 @@ from browser import Browser
 from iconizer.console.gui_factory_base import GuiFactoryBase
 
 
-class ConsoleManager(ItemToActionDictInListUi, MinimizeOnClose, ToggleMaxMin):
-    pass
-
-
 class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     """
     We must inherit QObject to have pyqtSignal declared here. And QObject.__init__ should also be called.
@@ -77,7 +73,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
 
     def get_app_list(self):
         if self.console_manager is None:
-            self.console_manager = ConsoleManager()
+            self.console_manager = ItemToActionDictInListUi()
         return self.console_manager
 
     def create_drop_target(self, callback):

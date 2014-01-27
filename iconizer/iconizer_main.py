@@ -9,7 +9,7 @@ from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 
 class Iconizer(threading.Thread):
-    def __init__(self, log_dir=None, msg_service=None):
+    def __init__(self, log_dir=None, msg_service=None, python_executable=None):
         super(Iconizer, self).__init__()
         #self.launched_app_dict = {}
         self.launch_server = None
@@ -18,6 +18,7 @@ class Iconizer(threading.Thread):
         self.log_dir = log_dir
         self.name_server = None
         self.msg_service = msg_service
+        self.python_executable = python_executable
 
     #########################
     # Called through pyro only
@@ -54,7 +55,7 @@ class Iconizer(threading.Thread):
     ######################
     def get_gui_launch_manager(self):
         if self.gui_launch_manger is None:
-            self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend(), self.log_dir, self.msg_service)
+            self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend(), self.log_dir, self.msg_service, self.python_executable)
         return self.gui_launch_manger
 
     def start_gui_no_return(self, app_descriptor_dict={}):

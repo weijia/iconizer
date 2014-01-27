@@ -80,31 +80,35 @@ class ConsoleOutputCollector:
                              "monitorServiceV2"
     ]
 
-    def __init__(self, log_root_path=None):
+    def __init__(self, log_root_path=None, python_executable=None):
         self.log_collector_thread_list = []
         self.pList = []
         self.stopped = False
         self.log_root_path = log_root_path
+        self.python_executable = python_executable
 
     def get_python_executable(self):
-        possible_python_exe_path = []
-        #print os.environ
-        try:
-            possible_python_exe_path.append(sys.executable)
-            possible_python_exe_path.append(os.path.join(os.environ['VIRTUAL_ENV'], 'Scripts/pythonw.exe'))
-            #print 'using virtual env:', pythonWinPathList[0], progAndParam
-        except:
-            pass
-        possible_python_exe_path.extend(
-            ['c:/Python27/pythonw.exe', 'd:/python27/pythonw.exe', 'd:/python25/pythonw.exe',
-             'c:/python27/pythonw.exe', 'c:/python26/pythonw.exe', 'c:/python25/pythonw.exe'])
-        for i in possible_python_exe_path:
-            if os.path.exists(i):
-                target_python_executable = i
-                break
-            else:
-                #print i, ", does not exist"
+        if self.python_executable is None:
+            possible_python_exe_path = []
+            #print os.environ
+            try:
+                possible_python_exe_path.append(sys.executable)
+                possible_python_exe_path.append(os.path.join(os.environ['VIRTUAL_ENV'], 'Scripts/pythonw.exe'))
+                #print 'using virtual env:', pythonWinPathList[0], progAndParam
+            except:
                 pass
+            possible_python_exe_path.extend(
+                ['c:/Python27/pythonw.exe', 'd:/python27/pythonw.exe', 'd:/python25/pythonw.exe',
+                 'c:/python27/pythonw.exe', 'c:/python26/pythonw.exe', 'c:/python25/pythonw.exe'])
+            for i in possible_python_exe_path:
+                if os.path.exists(i):
+                    target_python_executable = i
+                    break
+                else:
+                    #print i, ", does not exist"
+                    pass
+        else:
+            target_python_executable = self.python_executable
         return target_python_executable
 
     def run_app_in_window(self, target, cwd, app_or_script_path_and_param_list):
@@ -138,7 +142,7 @@ class ConsoleOutputCollector:
         else:
             self.real_execute_path_and_param_list = []
             self.real_execute_path_and_param_list.extend(app_or_script_path_and_param_list)
-
+        print self.real_execute_path_and_param_list
         if True:#try:
             #print self.real_execute_path_and_param_list
             if not os.path.exists(self.real_execute_path_and_param_list[0]):

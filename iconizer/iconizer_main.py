@@ -8,7 +8,7 @@ from iconizer.nameserver import NameServerInThread
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 LAUNCHER = "ufs_launcher"
-
+Pyro4.config.COMMTIMEOUT=0.5
 
 class NameServerAlreadyStarted(Exception):
     pass
@@ -22,7 +22,6 @@ class Iconizer(threading.Thread):
         #Create windows
         self.gui_launch_manger = None
         self.log_dir = log_dir
-        self.name_server = None
         self.msg_service = msg_service
         self.uri = None
         self.python_executable = python_executable
@@ -43,14 +42,6 @@ class Iconizer(threading.Thread):
     ######################
     # External interface
     ######################
-    def start_name_server(self):
-        if self.name_server is None:
-            self.name_server = NameServerInThread()
-            self.name_server.start()
-            self.register_to_name_server()
-        else:
-            raise NameServerAlreadyStarted()
-
     def execute(self, app_descriptor_dict):
         if not self.is_server_already_started():
             self.start_gui_no_return(app_descriptor_dict)
@@ -88,15 +79,13 @@ class Iconizer(threading.Thread):
         except:
             print "Calling remote execute, but server not running"
 
-    def register_to_name_server(self):
-        ns = Pyro4.locateNS()
-        ns.register(LAUNCHER, self.uri)
-        print "uri=", self.uri
-
     def launch_service_msg_loop(self):
         self.pyro_daemon = Pyro4.Daemon(port=8018)
         self.uri = self.pyro_daemon.register(self, LAUNCHER)
-        self.pyro_daemon.requestLoop()
+        self.pyro_daemon.requestLoop(loopCondition=self.still_running)
+
+    def still_running(self):
+        print "still running"
 
     def run(self):
         self.launch_service_msg_loop()
@@ -104,10 +93,6 @@ class Iconizer(threading.Thread):
     def on_final_close(self):
         print 'shutting down daemon'
         self.pyro_daemon.shutdown()
-        print 'shutting down name server'
-        if not (self.name_server is None):
-            self.name_server.shutdown()
-            print 'name server shut down done'
 
     def is_server_already_started(self):
         try:

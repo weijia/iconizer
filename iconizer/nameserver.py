@@ -15,23 +15,26 @@ class NameServerInThread(threading.Thread):
         except:
             return False
 
+    def name_server_msg_loop(self):
+        nsUri, daemon, bcserver = Pyro4.naming.startNS()
+        self.name_server_daemon = daemon
+        print nsUri, daemon, bcserver
+        try:
+            daemon.requestLoop()
+        except:
+            import traceback
+            traceback.print_exc()
+        finally:
+            daemon.close()
+            if bcserver is not None:
+                bcserver.close()
+
     def run(self):
         if self.is_name_server_started():
-            return
-        else:
-            nsUri, daemon, bcserver = Pyro4.naming.startNS()
-            self.name_server_daemon = daemon
-            print nsUri, daemon, bcserver
-            try:
-                daemon.requestLoop()
-            except:
-                import traceback
-                traceback.print_exc()
-            finally:
-                daemon.close()
-                if bcserver is not None:
-                    bcserver.close()
-            print("NS shut down.")
+            raise "Name server running"
+
+        self.name_server_msg_loop()
+        print("NS shut down.")
 
     def shutdown(self):
         self.name_server_daemon.shutdown()

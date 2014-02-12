@@ -7,6 +7,12 @@ from iconizer.console.launcher import CrossGuiLauncher, call_function_no_excepti
 from iconizer.nameserver import NameServerInThread
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
+LAUNCHER = "ufs_launcher"
+
+
+class NameServerAlreadyStarted(Exception):
+    pass
+
 
 class Iconizer(threading.Thread):
     def __init__(self, log_dir=None, msg_service=None, python_executable=None):
@@ -18,6 +24,7 @@ class Iconizer(threading.Thread):
         self.log_dir = log_dir
         self.name_server = None
         self.msg_service = msg_service
+        self.uri = None
         self.python_executable = python_executable
 
     #########################
@@ -36,10 +43,16 @@ class Iconizer(threading.Thread):
     ######################
     # External interface
     ######################
-    def execute(self, app_descriptor_dict):
-        if not self.is_server_already_started():
+    def start_name_server(self):
+        if self.name_server is None:
             self.name_server = NameServerInThread()
             self.name_server.start()
+            self.register_to_name_server()
+        else:
+            raise NameServerAlreadyStarted()
+
+    def execute(self, app_descriptor_dict):
+        if not self.is_server_already_started():
             self.start_gui_no_return(app_descriptor_dict)
         else:
             self.execute_in_remote(app_descriptor_dict)
@@ -75,13 +88,18 @@ class Iconizer(threading.Thread):
         except:
             print "Calling remote execute, but server not running"
 
-    def run(self):
-        self.pyro_daemon = Pyro4.Daemon(port=8018)
-        uri = self.pyro_daemon.register(self, "ufs_launcher")
+    def register_to_name_server(self):
         ns = Pyro4.locateNS()
-        ns.register("ufs_launcher", uri)
-        print "uri=", uri
+        ns.register(LAUNCHER, self.uri)
+        print "uri=", self.uri
+
+    def launch_service_msg_loop(self):
+        self.pyro_daemon = Pyro4.Daemon(port=8018)
+        self.uri = self.pyro_daemon.register(self, LAUNCHER)
         self.pyro_daemon.requestLoop()
+
+    def run(self):
+        self.launch_service_msg_loop()
 
     def on_final_close(self):
         print 'shutting down daemon'
@@ -89,7 +107,7 @@ class Iconizer(threading.Thread):
         print 'shutting down name server'
         if not (self.name_server is None):
             self.name_server.shutdown()
-        print 'name server shut down done'
+            print 'name server shut down done'
 
     def is_server_already_started(self):
         try:
@@ -102,13 +120,14 @@ class Iconizer(threading.Thread):
 
     def get_launch_server(self):
         if self.launch_server is None:
-            uri_string = "PYRO:ufs_launcher@127.0.0.1:8018"
+            uri_string = "PYRO:" + LAUNCHER +\
+                         "@127.0.0.1:8018"
             self.launch_server = Pyro4.Proxy(uri_string)
         return self.launch_server
 
 
 def main():
-    Iconizer().execute({"testapp_id_for_later_killing": ["dir"]})
+    Iconizer().execute({"test_app_id_for_later_killing": ["dir"]})
 
 
 if __name__ == '__main__':

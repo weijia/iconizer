@@ -36,10 +36,7 @@ class CrossGuiLauncher(object):
         self.gui_factory = gui_factory
         self.taskbar_icon_app = self.gui_factory.create_taskbar_icon_app()
         self.app_list_ui_for_app_id_str_to_app_wnd_state = self.gui_factory.get_app_list()
-
-        super(CrossGuiLauncher, self).__init__()
         self.app_id_str_to_console_wnd = {}
-
         self.wnd_to_console_dict = {}
         self.log_collector_to_menu_item_dict = {}
         self.wnd_to_app_id_str_dict = {}

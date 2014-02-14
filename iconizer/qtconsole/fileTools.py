@@ -21,12 +21,12 @@ try:
             raise "file not found"
             return None
         except DistributionNotFound:
-            find_resource_in_sub_folders(filename)
+            return find_resource_in_sub_folders(filename)
 except:
     import os
 
     def find_resource_in_pkg(filename):
-        find_resource_in_sub_folders(filename)
+        return find_resource_in_sub_folders(filename)
 
 
 

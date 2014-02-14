@@ -21,20 +21,11 @@ class Iconizer(IconizerServer):
         else:
             self.execute_in_remote(app_descriptor_dict)
 
-    def add_final_close_listener(self, final_close_callback):
-        self.get_gui_launch_manager().final_close_callback_list.append(final_close_callback)
-
-    def add_close_listener(self, close_callback):
-        self.get_gui_launch_manager().close_callback_list.append(close_callback)
-
     def execute_in_remote(self, app_descriptor_dict):
         try:
             self.get_launch_server().send_msg({"command": "launch", "apps": app_descriptor_dict})
         except:
             print "Calling remote execute, but server not running"
-
-    def on_final_close(self):
-        self.pyro_shutdown()
 
     def is_server_already_started(self):
         try:

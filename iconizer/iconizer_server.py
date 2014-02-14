@@ -42,7 +42,16 @@ class IconizerServer(PyroServiceObj):
         call_function_no_exception(self.get_gui_launch_manager().execute_inconized, app_descriptor_dict)
         self.get_gui_launch_manager().start_cross_gui_launcher_no_return()
 
+    def on_final_close(self):
+        self.pyro_shutdown()
+
     def get_gui_launch_manager(self):
         if self.gui_launch_manger is None:
             self.gui_launch_manger = CrossGuiLauncher(PyQtGuiBackend(), self.log_dir, self.python_executable)
         return self.gui_launch_manger
+
+    def add_final_close_listener(self, final_close_callback):
+        self.get_gui_launch_manager().final_close_callback_list.append(final_close_callback)
+
+    def add_close_listener(self, close_callback):
+        self.get_gui_launch_manager().close_callback_list.append(close_callback)

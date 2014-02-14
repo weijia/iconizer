@@ -97,6 +97,7 @@ class CrossGuiLauncher(object):
         self.taskbar_icon_app["Show/Hide"] = self.app_list_ui_for_app_id_str_to_app_wnd_state.ui_widget.toggle
         self.taskbar_icon_app["Exit"] = self.on_quit_clicked
         self.gui_factory.start_msg_loop()
+        print "launcher.py", "quitting msg loop"
 
     ###############################
     # Internal functions
@@ -107,7 +108,7 @@ class CrossGuiLauncher(object):
             log_collector.kill_console_process_tree()
 
         print "before factory exit"
-        self.gui_factory.exit()
+        self.gui_factory.abort_msg_loop()
         print "calling final close handlers"
         call_callbacks_in_list_no_exception(self.final_close_callback_list)
 

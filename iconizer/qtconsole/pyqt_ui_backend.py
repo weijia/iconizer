@@ -68,7 +68,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
         QtCore.QObject.connect(self.ctimer, QtCore.SIGNAL("timeout()"), callback)
         self.ctimer.start(milliseconds)
 
-    def exit(self):
+    def abort_msg_loop(self):
         QtGui.QApplication.quit()
 
     def get_app_list(self):

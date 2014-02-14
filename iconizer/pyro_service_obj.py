@@ -21,7 +21,9 @@ class PyroServiceObj(threading.Thread):
 
     def still_running(self):
         print "still running"
+        return True
 
     def pyro_shutdown(self):
         print 'shutting down daemon'
         self.pyro_daemon.shutdown()
+        print 'shutdown complete'

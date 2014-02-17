@@ -17,7 +17,8 @@ class PyroServiceObj(threading.Thread):
             self.pyro_daemon = Pyro4.Daemon(port=8018)
             self.uri = self.pyro_daemon.register(self, self.service_name)
             print self.uri
-            self.pyro_daemon.requestLoop(loopCondition=self.still_running)
+            #self.pyro_daemon.requestLoop(loopCondition=self.still_running)
+            self.pyro_daemon.requestLoop()
 
     def still_running(self):
         print "still running"

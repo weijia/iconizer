@@ -51,6 +51,8 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     def create_taskbar_icon_app(self):
         self.root_widget = QtGui.QWidget()
         icon_full_path = fileTools.find_resource_in_pkg("gf-16x16.png")
+        if icon_full_path is None:
+            raise "Icon file not found"
         self.tray_icon = List2SystemTray(QtGui.QIcon(icon_full_path), self.root_widget)
         #self.tray_icon["Example"] = exampleAction
         return self.tray_icon

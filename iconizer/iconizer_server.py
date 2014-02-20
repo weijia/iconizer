@@ -1,3 +1,4 @@
+from iconizer.iconizer_consts import ICONIZER_SERVICE_NAME
 from iconizer.pyro_service_obj import PyroServiceObj
 from iconizer.console.launcher import CrossGuiLauncher, call_function_no_exception, call_callbacks_in_list_no_exception
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
@@ -5,7 +6,7 @@ from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 class IconizerServer(PyroServiceObj):
     def __init__(self, log_dir=None, python_executable=None):
-        super(IconizerServer, self).__init__("ufs_launcher")
+        super(IconizerServer, self).__init__(ICONIZER_SERVICE_NAME)
         #self.launched_app_dict = {}
         self.launch_server = None
         #Create windows
@@ -24,6 +25,7 @@ class IconizerServer(PyroServiceObj):
         print "sending msg:", msg
         self.get_gui_launch_manager().send_msg(msg)
 
+    #noinspection PyMethodMayBeStatic
     def is_running(self):
         print "is_running_called"
         return True

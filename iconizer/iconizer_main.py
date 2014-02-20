@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import Pyro4
+from Pyro4.errors import CommunicationError
 from iconizer.iconizer_client import IconizerClient
 from iconizer.iconizer_server import IconizerServer
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
@@ -27,11 +28,9 @@ class Iconizer(IconizerServer):
             self.iconizer_client.is_running()
             print "Is running is True"
             return True
-        except:
+        except CommunicationError:
             print "Server not running"
             return False
-
-
 
 
 def main():

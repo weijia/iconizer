@@ -9,7 +9,7 @@ from iconizer.qtconsole.notification import find_resource_in_pkg
 class ListViewWindow(QtGui.QWidget):
     def __init__(self):
         super(ListViewWindow, self).__init__()
-        #ui_full_path = findFileInProduct('list_ui_widget.ui')
+        #ui_full_path = find_file_in_product('list_ui_widget.ui')
         ui_full_path = find_resource_in_pkg('list_window.ui')
         self.ui = uic.loadUi(ui_full_path, self)
         self.model = QStandardItemModel()

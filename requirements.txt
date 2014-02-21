@@ -1,2 +1,3 @@
 Pyro4
 rpyc
+git+https://github.com/weijia/libtool.git#egg=libtool

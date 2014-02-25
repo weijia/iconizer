@@ -52,16 +52,3 @@ class GuiServiceMsgHandler(object):
             except:
                 import traceback
                 traceback.print_exc()
-        #try:
-        #    name_server = Pyro4.locateNS()
-        #    proxy_uri = name_server.lookup(target)
-        #    proxy = Pyro4.Proxy(proxy_uri)
-        #    proxy.send_msg({"command": "dropped", "urls": urls})
-        #except:
-        #    import traceback
-        #    traceback.print_exc()
-        ############################
-        #beanstalk_server_host = '127.0.0.1'
-        #beanstalk_server_port = 8212
-        #beanstalk = beanstalkc.Connection(host=beanstalk_server_host, port=beanstalk_server_port)
-        #beanstalk.put(json.dumps({"command": "dropped", "urls": urls}))

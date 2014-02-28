@@ -1,6 +1,5 @@
-import json
-import Pyro4
-import beanstalkc
+from iconizer.console.drop_wnd_handler import DropWndHandler
+from iconizer.console.drop_wnd_handler_v2 import DropWndHandlerV2
 
 
 class GuiServiceMsgHandler(object):
@@ -11,44 +10,29 @@ class GuiServiceMsgHandler(object):
         self.wnd2target = {}
         self.target2wnd = {}
         self.handle2browser = {}
+        self.drop_wnd_cmd_handler = DropWndHandler(self.gui_factory)
+        self.drop_wnd_cmd_handler_v2 = DropWndHandlerV2(self.gui_factory)
+        self.extra_handler = {"DropWnd": self.drop_wnd_cmd_handler,
+                              "DestroyDropWnd": self.drop_wnd_cmd_handler,
+                              "DropWndV2": self.drop_wnd_cmd_handler_v2,
+                              "DestroyDropWndV2": self.drop_wnd_cmd_handler_v2,
+                              }
 
     def handle_msg(self, msg):
-        if msg["command"] == "launch":
+        command = msg["command"]
+        if command == "launch":
             print "apps: ", msg["apps"]
             self.gui_launch_manger.execute_inconized(msg["apps"])
-        elif msg["command"] == "DropWnd":
-            target = msg["target"]
-            tip = msg.get("tip", None)
-            drop_wnd = self.gui_factory.create_drop_target(self.drop_callback)
-            if not (tip is None):
-                drop_wnd.label.setText(tip)
-            self.wnd2target[drop_wnd] = target
-            self.target2wnd[target] = drop_wnd
-        elif msg["command"] == "DestroyDropWnd":
-            wnd = self.target2wnd[msg["target"]]
-            del self.target2wnd[msg["target"]]
-            del self.wnd2target[wnd]
-            #del self.target2wnd[msg]
-            wnd.deleteLater()
-        elif msg["command"] == "Browser":
+        elif command == "Browser":
             url = msg["url"]
             handle = msg["handle"]
             self.gui_factory.show_browser(handle, url)
-        elif msg["command"] == "DestroyBrowser":
+        elif command == "DestroyBrowser":
             handle = msg["handle"]
             self.gui_factory.remove_browser(handle)
-        elif msg["command"] == "notify":
+        elif command == "notify":
             msg_str = msg["msg"]
             self.gui_factory.msg(msg_str)
-
-    def drop_callback(self, drop_wnd, urls):
-        #print "dropped: ", urls
-        #print drop_wnd, self.wnd2target
-        target = self.wnd2target[drop_wnd]
-        #target_queue = beanstalkServiceBase(target)
-        if not (self.gui_launch_manger.msg_service is None):
-            try:
-                self.gui_launch_manger.msg_service.sendto(target, {"command": "dropped", "urls": urls})
-            except:
-                import traceback
-                traceback.print_exc()
+        else:
+            if command in self.extra_handler:
+                self.extra_handler[command].handle(msg)

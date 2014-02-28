@@ -18,7 +18,7 @@ class IconizerServer(PyroServiceObj):
     #########################
     # Called through pyro only
     #########################
-    def send_msg(self, msg):
+    def put_msg(self, msg):
         """
         Send command msg to GUI
         """
@@ -41,7 +41,7 @@ class IconizerServer(PyroServiceObj):
         self.start()
 
         #Execute app must be called in the main thread
-        call_function_no_exception(self.get_gui_launch_manager().execute_inconized, app_descriptor_dict)
+        call_function_no_exception(self.get_gui_launch_manager().execute_iconized, app_descriptor_dict)
         self.get_gui_launch_manager().start_cross_gui_launcher_no_return()
 
     def on_final_close(self):

@@ -13,7 +13,7 @@ def call_function_no_exception(func, *args):
     try:
         func(*args)
     except:
-        traceback.print_exc()    
+        traceback.print_exc()
 
 
 def call_callbacks_in_list_no_exception(callback_list):
@@ -115,7 +115,7 @@ class CrossGuiLauncher(object):
     #######################
     # App lauch realted
     #######################
-    def execute_inconized(self, app_descriptor_dict):
+    def execute_iconized(self, app_descriptor_dict):
         """
         Launch app in iconized mode
         :param app_descriptor_dict: example: {"testapp_id_for_later_killing": ["d:/testapp.bat"]}
@@ -157,8 +157,8 @@ class CrossGuiLauncher(object):
         #self.app_name_to_collector[app_path_and_param_gen_str] = collector
         self.log_collector_to_menu_item_dict[log_collector] = child_wnd
         #self.taskbar_icon_app[app_path_and_param_gen_str] = self.on_app_item_selected
-        self.app_list_ui_for_app_id_str_to_app_wnd_state[app_path_and_param_gen_str] = {"checked": False,
-                                                                                        "action": self.on_app_item_selected}
+        self.app_list_ui_for_app_id_str_to_app_wnd_state[app_path_and_param_gen_str] = \
+            {"checked": False, "action": self.on_app_item_selected}
         return log_collector
 
 

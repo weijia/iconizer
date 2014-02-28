@@ -28,3 +28,7 @@ class PyroServiceObj(threading.Thread):
         print 'shutting down daemon'
         self.pyro_daemon.shutdown()
         print 'shutdown complete'
+
+    def register_to_name_server(self):
+        ns = Pyro4.locateNS()
+        ns.register(self.service_name, self.uri)

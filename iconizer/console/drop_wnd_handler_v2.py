@@ -3,6 +3,10 @@ from msg_service.auto_route_msg_service import AutoRouteMsgService
 
 
 class DropWndHandlerV2(DropWndHandler):
+    def __init__(self, gui_factory):
+        super(DropWndHandlerV2, self).__init__(gui_factory)
+        self.wnd2target = {}
+        self.target2wnd = {}
     def handle(self, msg):
         if msg["command"] == "DropWndV2":
             target = msg["target"]

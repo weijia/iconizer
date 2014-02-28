@@ -32,6 +32,9 @@ class Iconizer(IconizerServer):
             print "Server not running"
             return False
 
+    def register(self):
+        self.iconizer_client.register_to_name_server()
+
 
 def main():
     Iconizer().execute({"test_app_id_for_later_killing": ["dir"]})

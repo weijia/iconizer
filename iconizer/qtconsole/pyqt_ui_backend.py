@@ -23,7 +23,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     def __init__(self):
         super(PyQtGuiBackend, self).__init__()
         self.app = QtGui.QApplication(sys.argv)
-        self.dropable_list = []
+        self.droppable_list = []
         self.browser_list = {}
         self.gui_signal.connect(self.msg_callback)
         self.gui_signal_callback = None

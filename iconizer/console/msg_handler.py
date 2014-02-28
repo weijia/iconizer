@@ -1,5 +1,7 @@
-from iconizer.console.drop_wnd_handler import DropWndHandler
-from iconizer.console.drop_wnd_handler_v2 import DropWndHandlerV2
+import libtool
+libtool.include_root_path(__file__, "iconizer")
+from console.drop_wnd_handler import DropWndHandler
+from console.drop_wnd_handler_v2 import DropWndHandlerV2
 
 
 class GuiServiceMsgHandler(object):

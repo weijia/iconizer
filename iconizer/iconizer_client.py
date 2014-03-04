@@ -11,7 +11,7 @@ class IconizerClient(object):
         #try:
             self.get_launch_server().put_msg({"command": "launch", "apps": app_descriptor_dict})
         #except:
-            print "Calling remote execute, but server not running"
+            #print "Calling remote execute, but server not running"
 
     def get_launch_server(self):
         if self.launch_server is None:

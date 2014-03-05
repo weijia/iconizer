@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
 import Pyro4
 from Pyro4.errors import CommunicationError
 from iconizer.iconizer_client import IconizerClient
@@ -7,6 +8,9 @@ from iconizer.iconizer_server import IconizerServer
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 Pyro4.config.COMMTIMEOUT=0.5
+
+
+log = logging.getLogger(__name__)
 
 
 class Iconizer(IconizerServer):
@@ -26,10 +30,12 @@ class Iconizer(IconizerServer):
     def is_server_already_started(self):
         try:
             self.iconizer_client.is_running()
-            print "Is running is True"
+            log.debug("is_server_already_started: Is running is True")
             return True
         except CommunicationError:
-            print "Server not running"
+            log.error("is_server_already_started: Server not running")
+            import traceback
+            traceback.print_exc()
             return False
 
     def register(self):

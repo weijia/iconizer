@@ -1,5 +1,9 @@
+import logging
 import Pyro4
 from iconizer_consts import ICONIZER_SERVICE_NAME
+
+
+log = logging.getLogger(__name__)
 
 
 class IconizerClient(object):
@@ -14,6 +18,7 @@ class IconizerClient(object):
             #print "Calling remote execute, but server not running"
 
     def get_launch_server(self):
+        log.debug("Getting server")
         if self.launch_server is None:
             uri_string = "PYRO:" + ICONIZER_SERVICE_NAME +\
                          "@127.0.0.1:8018"

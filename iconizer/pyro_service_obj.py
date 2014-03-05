@@ -8,13 +8,14 @@ class PyroServiceObj(threading.Thread):
         self.service_name = service_name
         self.uri = None
         self.pyro_daemon = None
+        self.port = None
 
     def run(self):
         self.launch_service_msg_loop()
 
     def launch_service_msg_loop(self):
         if self.pyro_daemon is None:
-            self.pyro_daemon = Pyro4.Daemon(port=8018)
+            self.pyro_daemon = Pyro4.Daemon(port=self.port)
             self.uri = self.pyro_daemon.register(self, self.service_name)
             print self.uri
             #self.pyro_daemon.requestLoop(loopCondition=self.still_running)

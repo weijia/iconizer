@@ -14,6 +14,8 @@ class IconizerServer(PyroServiceObj):
         self.log_dir = log_dir
         self.uri = None
         self.python_executable = python_executable
+        #Manu
+        self.port = 8018
 
     #########################
     # Called through pyro only

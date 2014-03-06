@@ -7,8 +7,6 @@ from iconizer.iconizer_client import IconizerClient
 from iconizer.iconizer_server import IconizerServer
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
-Pyro4.config.COMMTIMEOUT=0.5
-
 
 log = logging.getLogger(__name__)
 

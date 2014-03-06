@@ -15,13 +15,15 @@ class PyroServiceBase(threading.Thread):
         self.port = None
 
     def run(self):
+        self.init_service_name()
+        self.create_daemon()
         self.launch_service_msg_loop()
 
     def launch_service_msg_loop(self):
         if self.pyro_daemon is None:
-            self.create_daemon()
-            #self.pyro_daemon.requestLoop(loopCondition=self.still_running)
-            self.pyro_daemon.requestLoop()
+            raise "Pyro daemon must be started first using create_daemon"
+        #self.pyro_daemon.requestLoop(loopCondition=self.still_running)
+        self.pyro_daemon.requestLoop()
 
     def start_daemon_register_and_launch_loop(self):
         self.init_service_name()
@@ -73,7 +75,8 @@ class PyroServiceBase(threading.Thread):
         return default_name
 
     def get_filename(self):
+        inspect_getouterframes = inspect.getouterframes(inspect.currentframe())
         frame, filename, line_number, function_name, lines, index = \
-            inspect.getouterframes(inspect.currentframe())[2]
+            inspect_getouterframes[3]
         (frame, filename, line_number, function_name, lines, index)
         return self.get_file_basename(filename)

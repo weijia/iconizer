@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import Pyro4
-from Pyro4.errors import CommunicationError
+from Pyro4.errors import CommunicationError, ConnectionClosedError
 from iconizer.iconizer_client import IconizerClient
 from iconizer.iconizer_server import IconizerServer
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
@@ -19,6 +19,7 @@ class Iconizer(IconizerServer):
     ######################
     def execute(self, app_descriptor_dict):
         if not self.is_server_already_started():
+            log.debug("Server is not running")
             self.start_gui_no_return(app_descriptor_dict)
         else:
             self.iconizer_client.execute_in_remote(app_descriptor_dict)
@@ -32,8 +33,13 @@ class Iconizer(IconizerServer):
             self.iconizer_client.is_running()
             log.debug("is_server_already_started: Is running is True")
             return True
+        except ConnectionClosedError:
+            log.debug("is_server_already_started: ConnectionClosedError, exception printed:")
+            import traceback
+            traceback.print_exc()
+            return True
         except CommunicationError:
-            log.error("is_server_already_started: Server not running")
+            log.debug("is_server_already_started: CommunicationError, exception printed:")
             import traceback
             traceback.print_exc()
             return False

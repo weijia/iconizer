@@ -1,12 +1,12 @@
 from iconizer.iconizer_consts import ICONIZER_SERVICE_NAME
-from iconizer.pyro_service_obj import PyroServiceObj
+from iconizer.pyro_service_base import PyroServiceBase
 from iconizer.console.launcher import CrossGuiLauncher, call_function_no_exception, call_callbacks_in_list_no_exception
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 
 
-class IconizerServer(PyroServiceObj):
+class IconizerServer(PyroServiceBase):
     def __init__(self, log_dir=None, python_executable=None):
-        super(IconizerServer, self).__init__(ICONIZER_SERVICE_NAME)
+        super(IconizerServer, self).__init__()
         #self.launched_app_dict = {}
         self.launch_server = None
         #Create windows
@@ -14,8 +14,8 @@ class IconizerServer(PyroServiceObj):
         self.log_dir = log_dir
         self.uri = None
         self.python_executable = python_executable
-        #Manu
         self.port = 8018
+        self.set_service_name(ICONIZER_SERVICE_NAME)
 
     #########################
     # Called through pyro only

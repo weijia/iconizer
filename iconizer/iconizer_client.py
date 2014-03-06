@@ -21,12 +21,12 @@ class IconizerClient(object):
         log.debug("Getting server")
         if self.launch_server is None:
             uri_string = "PYRO:" + ICONIZER_SERVICE_NAME +\
-                         "@127.0.0.1:8018"
+                         "@localhost:8018"
             self.launch_server = Pyro4.Proxy(uri_string)
         return self.launch_server
 
     def is_running(self):
-        self.get_launch_server().is_running()
+        return self.get_launch_server().is_running()
 
     def register_to_name_server(self):
         self.get_launch_server().register_to_name_server()

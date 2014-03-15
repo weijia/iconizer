@@ -3,10 +3,12 @@ import logging
 import os
 import threading
 import Pyro4
+from services.svc_base.stoppable import Stoppable
+
 log = logging.getLogger(__name__)
 
 
-class PyroServiceBase(threading.Thread):
+class PyroServiceBase(threading.Thread, Stoppable):
     def __init__(self):
         super(PyroServiceBase, self).__init__()
         self.service_name = None
@@ -64,6 +66,7 @@ class PyroServiceBase(threading.Thread):
     def pyro_shutdown(self):
         print 'shutting down daemon'
         self.pyro_daemon.shutdown()
+        self.set_stop()
         print 'shutdown complete'
 
     def put_msg(self, msg):

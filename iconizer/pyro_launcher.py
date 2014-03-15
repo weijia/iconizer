@@ -1,5 +1,4 @@
-import os
-from libtool.filetools import find_callable_in_app_framework
+from libtool.filetools import find_callable_in_app_framework, get_app_name_from_full_path
 from iconizer_main import Iconizer
 
 
@@ -32,13 +31,3 @@ class Launcher(object):
     @staticmethod
     def start_app_with_exact_full_path_and_param_list_no_wait(exact_full_path, param_list):
         Iconizer().execute({exact_full_path, [exact_full_path].extend(param_list)})
-
-
-def get_app_name_from_ufs_url(app_ufs_url):
-    return get_app_name_from_full_path(app_ufs_url)
-
-
-def get_app_name_from_full_path(app_path):
-    app_filename = os.path.basename(app_path)
-    app_name = app_filename.split(".")[0]
-    return app_name

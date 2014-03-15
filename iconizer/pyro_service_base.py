@@ -3,12 +3,12 @@ import logging
 import os
 import threading
 import Pyro4
-from services.svc_base.stoppable import Stoppable
+from services.svc_base.stoppableThread import StoppableThread
 
 log = logging.getLogger(__name__)
 
 
-class PyroServiceBase(threading.Thread, Stoppable):
+class PyroServiceBase(StoppableThread):
     def __init__(self):
         super(PyroServiceBase, self).__init__()
         self.service_name = None

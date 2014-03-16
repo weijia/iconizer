@@ -80,6 +80,6 @@ class PyroServiceBase(StoppableThread):
     def get_filename(self):
         inspect_getouterframes = inspect.getouterframes(inspect.currentframe())
         frame, filename, line_number, function_name, lines, index = \
-            inspect_getouterframes[3]
+            inspect_getouterframes[4]
         (frame, filename, line_number, function_name, lines, index)
         return self.get_file_basename(filename)

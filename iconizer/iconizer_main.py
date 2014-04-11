@@ -33,13 +33,13 @@ class Iconizer(IconizerServer):
             return True
         except ConnectionClosedError:
             log.debug("is_server_already_started: ConnectionClosedError, exception printed:")
-            import traceback
-            traceback.print_exc()
+            #import traceback
+            #traceback.print_exc()
             return True
         except CommunicationError:
             log.debug("is_server_already_started: CommunicationError, exception printed:")
-            import traceback
-            traceback.print_exc()
+            #import traceback
+            #traceback.print_exc()
             return False
 
     def register(self):

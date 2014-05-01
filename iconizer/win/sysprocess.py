@@ -1,3 +1,4 @@
+import logging
 import pywintypes
 
 try:
@@ -7,6 +8,7 @@ except:
     #Temp workaround for ci.
     pass
 
+log = logging
 
 #Codes from http://code.activestate.com/recipes/496767-set-process-priority-in-windows/
 def set_priority(pid=None,priority=1):
@@ -56,6 +58,8 @@ def killChildProcessTree(pid, killRoot = False):
 def TerminateProcess(process_info):
     try:
         win32api.TerminateProcess(int(process_info._handle), -1)
+        print process_info.pid, "killed, maybe not a good way."
     except pywintypes.error:
-        print "killing failed, app may terminated by itself: ", process_info.pid
+        logger = logging.getLogger(__name__)
+        logger.info("killing failed, app may terminated by itself: "+str(process_info.pid))
 

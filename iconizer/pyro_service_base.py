@@ -57,6 +57,8 @@ class PyroServiceBase(StoppableThread):
         if self.uri is None:
             raise "Pyro daemon must be started first using create_daemon"
         ns = Pyro4.locateNS()
+        log.debug("Registing ", self.service_name)
+        print "Registing ", self.service_name
         ns.register(self.service_name, self.uri)
 
     def still_running(self):

@@ -31,11 +31,15 @@ class Draggable:
 
 class Droppable(QtGui.QWidget, Draggable):
 
+    def set_windows_flags(self):
+        self.setWindowFlags(
+            QtCore.Qt.CustomizeWindowHint | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+
     def __init__(self, wnd_color = None):
         super(Droppable, self).__init__()
         ui_full_path = find_resource_in_pkg('droppable.ui')
         self.ui = uic.loadUi(ui_full_path, self)
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint|QtCore.Qt.Tool|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
+        self.set_windows_flags()
         self.setAcceptDrops(True)
         #print '-------------------------------------', g_config_dict["drop_wnd_color"]
         if not (wnd_color is None):
@@ -59,6 +63,8 @@ class Droppable(QtGui.QWidget, Draggable):
             e.ignore() 
         '''
         e.accept()
+        self.set_windows_flags()
+
     def set_drop_callback(self, drop_callback):
         self.drop_callback = drop_callback
         
@@ -70,6 +76,7 @@ class Droppable(QtGui.QWidget, Draggable):
         for i in e.mimeData().urls():
             res.append(unicode(i.toString()))
         self.drop_callback(self, res)
+        self.set_windows_flags()
         
 if __name__ == '__main__':
     main()

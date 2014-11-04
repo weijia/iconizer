@@ -1,5 +1,3 @@
-import libtool
-libtool.include_root_path(__file__, "iconizer")
 from iconizer.console.drop_wnd_handler import DropWndHandler
 from iconizer.console.drop_wnd_handler_v2 import DropWndHandlerV2
 

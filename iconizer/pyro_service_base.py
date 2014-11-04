@@ -1,9 +1,9 @@
 import inspect
 import logging
 import os
-import threading
 import Pyro4
-from services.svc_base.stoppableThread import StoppableThread
+from stoppable_thread import StoppableThread
+
 
 log = logging.getLogger(__name__)
 

@@ -124,5 +124,5 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
     def get_clipboard_data(self):
         # super(PyQtGuiBackend, self).get_clipboard_data()
         clipboard = self.app.clipboard()
-        return clipboard.text()
+        return str(clipboard.text())
 

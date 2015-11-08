@@ -1,4 +1,5 @@
 from iconizer.handlers.ui_msg_handler_base import UiMsgHandlerBase
+from iconizer.msg_service.msg_service_interface.msg_service_factory_interface import MsgServiceFactory
 
 __author__ = 'weijia'
 
@@ -9,6 +10,7 @@ class ClipboardMsgHandler(UiMsgHandlerBase):
         self.receivers = []
         self.gui_factory = gui_factory
         self.is_listening = False
+        self.msg_service = MsgServiceFactory().get_msg_service()
 
     def is_listening_clipboard_event(self):
         return self.is_listening
@@ -26,5 +28,6 @@ class ClipboardMsgHandler(UiMsgHandlerBase):
                 data = self.gui_factory.get_clipboard_data()
                 self.msg_service.send_to(receiver, {"event": "clipboard", "data": data})
             except:
-                pass
+                import traceback
+                traceback.print_exc()
 

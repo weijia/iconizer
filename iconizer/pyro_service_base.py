@@ -16,6 +16,9 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
         self.pyro_daemon = None
         self.port = None
 
+    def set_port(self, port):
+        self.port = port
+
     def run(self):
         self.init_service_name()
         self.create_daemon()
@@ -52,6 +55,9 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
             self.pyro_daemon = Pyro4.Daemon(port=self.port)
         self.uri = self.pyro_daemon.register(self, self.service_name)
         log.debug("Pyro service uri: " + str(self.uri))
+
+    def get_channel_full_name(self):
+        return str(self.uri)
 
     def register_to_name_server(self):
         if self.uri is None:

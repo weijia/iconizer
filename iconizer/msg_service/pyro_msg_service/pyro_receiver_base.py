@@ -5,7 +5,7 @@ __author__ = 'weijia'
 
 # noinspection PyMethodMayBeStatic
 class PyroReceiverBase(object):
-    def put_msg(self):
+    def put_msg(self, msg):
         raise InterfaceNotImplemented
 
     def is_pyro_receiver(self):

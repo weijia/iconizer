@@ -33,7 +33,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
         self.root_widget = None
 
     ################################################
-    #Msg related functions
+    # Msg related functions
     def trigger(self, msg):
         print "trigger called:", msg
         self.gui_signal.emit(msg)
@@ -47,14 +47,14 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
         self.gui_signal_callback(msg)
 
     ################################################
-    #GUI related
+    # GUI related
     def create_taskbar_icon_app(self):
         self.root_widget = QtGui.QWidget()
         icon_full_path = fileTools.find_resource_in_pkg("gf-16x16.png")
         if icon_full_path is None:
             raise "Icon file not found"
         self.tray_icon = List2SystemTray(QtGui.QIcon(icon_full_path), self.root_widget)
-        #self.tray_icon["Example"] = exampleAction
+        # self.tray_icon["Example"] = exampleAction
         return self.tray_icon
 
     def create_console_output_wnd(self, parent, logFilePath=None):
@@ -90,7 +90,7 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
             del self.browser_list[handle]
 
     def show_browser(self, handle, url):
-        #when calling load, url will be quoted? Seems yes.
+        # when calling load, url will be quoted? Seems yes.
         if handle in self.browser_list:
             self.browser_list[handle].load(QUrl(url))
             self.browser_list[handle].show()
@@ -99,17 +99,17 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
         else:
             web = Browser()
             web.load(QUrl(url))
-            #print "pyqt opening: ", url
-            #web.load(QUrl("http://baidu.com"))
+            # print "pyqt opening: ", url
+            # web.load(QUrl("http://baidu.com"))
             self.browser_list[handle] = web
             web.show()
             web.raise_()
             web.activateWindow()
-            #objWebSettings = self.browser_list[handle].settings();
-            #print objWebSettings.defaultTextEncoding();
-            #print objWebSettings.fontFamily(0)
-            #objWebSettings.setFontFamily(0, '����')
-            #objWebSettings.setDefaultTextEncoding("gbk");
+            # objWebSettings = self.browser_list[handle].settings();
+            # print objWebSettings.defaultTextEncoding();
+            # print objWebSettings.fontFamily(0)
+            # objWebSettings.setFontFamily(0, '����')
+            # objWebSettings.setDefaultTextEncoding("gbk");
 
     def msg(self, msg):
         self.tray_icon.msg(msg)

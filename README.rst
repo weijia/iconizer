@@ -28,6 +28,7 @@ Additional features:
 -------------------------------------------------------------------------------------------------------
 * Send msg to console manager to launch python script app, java console app, and other console app.
 * Send msg to console manager to open a web page.
+* Pyro4 name server is not created by default as user can directly control the app from PYRO:ufs_launcher@localhost:8018
 
 Interface:
 -------------------------------------------------------------------------------------------------------

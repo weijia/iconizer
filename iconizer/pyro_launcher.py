@@ -12,11 +12,11 @@ class Launcher(object):
         :return:
         """
         app_path = find_callable_in_app_framework(app_name)
-        #print app_path
+        # print app_path
         app_path_and_param = [app_path, ]
         app_path_and_param.extend(param_list)
-        #print app_path_and_param
-        #print {app_name: app_path_and_param}
+        # print app_path_and_param
+        # print {app_name: app_path_and_param}
         Iconizer().execute({app_name: app_path_and_param})
 
     @staticmethod

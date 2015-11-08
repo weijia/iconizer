@@ -28,7 +28,7 @@ class PyroMsgServiceProvider(MsgServiceProviderInterface):
         else:
             raise InvalidPyroReceiver
 
-    def create_msg_channel(self, channel_name, port=None):
+    def create_channel(self, channel_name, port=None):
         ch = PyroReceiver()
         ch.set_port(port)
         ch.set_service_name(channel_name)

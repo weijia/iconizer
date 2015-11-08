@@ -26,7 +26,7 @@ class ClipboardMsgHandler(UiMsgHandlerBase):
         for receiver in self.receivers:
             try:
                 data = self.gui_factory.get_clipboard_data()
-                self.msg_service.send_to(receiver, {"event": "clipboard", "data": data})
+                self.msg_service.send_to(receiver, {"msg_type": "clipboard", "data": {"text": data}})
             except:
                 import traceback
                 traceback.print_exc()

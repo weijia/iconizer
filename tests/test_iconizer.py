@@ -26,15 +26,16 @@ class BackgroundTask(Thread):
         sleep(10)
         s = MsgServiceFactory().get_msg_service()
         receiving_ch = "receiver_channel"
-        c = s.create_msg_channel(receiving_ch)
+        c = s.create_channel(receiving_ch)
         s.send_to(ICONIZER_SERVICE_NAME,  {"command": "register_to_clipboard",
                                            "target": c.get_channel_full_name()})
         while True:
             m = c.get_msg()
-            print m
+            # print m
+            self.on_clip(m)
 
-    def on_clip(self, a, b):
-        print "hello world"
+    def on_clip(self, msg):
+        print msg
 
 
 class TestIconizer(unittest.TestCase):

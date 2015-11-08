@@ -2,12 +2,13 @@ import inspect
 import logging
 import os
 import Pyro4
+from iconizer.msg_service.pyro_msg_service.pyro_receiver_base import PyroReceiverBase
 from stoppable_thread import StoppableThread
 
 log = logging.getLogger(__name__)
 
 
-class PyroServiceBase(StoppableThread):
+class PyroServiceBase(PyroReceiverBase, StoppableThread):
     def __init__(self):
         super(PyroServiceBase, self).__init__()
         self.service_name = None
@@ -70,9 +71,6 @@ class PyroServiceBase(StoppableThread):
         self.pyro_daemon.shutdown()
         self.set_stop()
         print 'shutdown complete'
-
-    def put_msg(self, msg):
-        pass
 
     def get_filename(self):
         inspect_getouterframes = inspect.getouterframes(inspect.currentframe())

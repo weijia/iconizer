@@ -6,6 +6,7 @@ from iconizer.msg_service.msg_service_interface.msg_service_factory_interface im
 class DropWndHandlerV2(DropWndHandler):
     def __init__(self, gui_factory):
         super(DropWndHandlerV2, self).__init__(gui_factory)
+        self.msg_service = MsgServiceFactory().get_msg_service()
         self.wnd2target = {}
         self.target2wnd = {}
 
@@ -32,5 +33,4 @@ class DropWndHandlerV2(DropWndHandler):
         # msg_service = AutoRouteMsgService()
         # msg_service.send_to(target, {"command": "dropped", "urls": urls})
 
-        self.msg_service = MsgServiceFactory().get_msg_service()
         self.msg_service.send_to(target, {"command": "dropped", "urls": urls})

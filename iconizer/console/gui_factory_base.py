@@ -28,3 +28,9 @@ class GuiFactoryBase(object):
 
     def msg(self, msg):
         pass
+
+    def register_to_clipboard_event(self, handle):
+        pass
+
+    def get_clipboard_data(self):
+        pass

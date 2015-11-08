@@ -5,11 +5,13 @@ def find_resource_in_sub_folders(filename):
     p = os.getcwd()
     for dirpath, dirnames, filenames in os.walk(p):
         if filename in filenames:
-            #print 'find file:', os.path.join(dirpath, filename)
+            # print 'find file:', os.path.join(dirpath, filename)
             return os.path.join(dirpath, filename)
+
 
 try:
     from pkg_resources import Requirement, resource_filename, resource_exists, DistributionNotFound
+
 
     def find_resource_in_pkg(filename):
         try:
@@ -25,10 +27,6 @@ try:
 except:
     import os
 
+
     def find_resource_in_pkg(filename):
         return find_resource_in_sub_folders(filename)
-
-
-
-
-

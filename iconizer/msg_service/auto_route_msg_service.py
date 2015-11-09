@@ -1,7 +1,5 @@
 import logging
-from msg_service_interface import MsgServiceInterface, UnknownReceiver
 from predefined_receivers import TAGGING_RECEIVER
-from pyro_msg_service import PyroMsgService
 
 
 log = logging.getLogger(__name__)

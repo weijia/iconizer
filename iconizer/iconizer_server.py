@@ -1,4 +1,5 @@
 from iconizer.iconizer_consts import ICONIZER_SERVICE_NAME
+from iconizer.msg_service.pyro_msg_service.pyro_receiver_base import PyroReceiverBase
 from iconizer.pyro_service_base import PyroServiceBase
 from iconizer.console.launcher import CrossGuiLauncher, call_function_no_exception, call_callbacks_in_list_no_exception
 from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend

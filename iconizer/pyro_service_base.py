@@ -2,19 +2,22 @@ import inspect
 import logging
 import os
 import Pyro4
+from iconizer.msg_service.pyro_msg_service.pyro_receiver_base import PyroReceiverBase
 from stoppable_thread import StoppableThread
-
 
 log = logging.getLogger(__name__)
 
 
-class PyroServiceBase(StoppableThread):
+class PyroServiceBase(PyroReceiverBase, StoppableThread):
     def __init__(self):
         super(PyroServiceBase, self).__init__()
         self.service_name = None
         self.uri = None
         self.pyro_daemon = None
         self.port = None
+
+    def set_port(self, port):
+        self.port = port
 
     def run(self):
         self.init_service_name()
@@ -24,7 +27,7 @@ class PyroServiceBase(StoppableThread):
     def launch_service_msg_loop(self):
         if self.pyro_daemon is None:
             raise "Pyro daemon must be started first using create_daemon"
-        #self.pyro_daemon.requestLoop(loopCondition=self.still_running)
+        # self.pyro_daemon.requestLoop(loopCondition=self.still_running)
         self.pyro_daemon.requestLoop()
 
     def start_daemon_register_and_launch_loop(self):
@@ -51,16 +54,20 @@ class PyroServiceBase(StoppableThread):
         else:
             self.pyro_daemon = Pyro4.Daemon(port=self.port)
         self.uri = self.pyro_daemon.register(self, self.service_name)
-        log.debug("Pyro service uri: "+str(self.uri))
+        log.debug("Pyro service uri: " + str(self.uri))
+
+    def get_channel_full_name(self):
+        return str(self.uri)
 
     def register_to_name_server(self):
         if self.uri is None:
             raise "Pyro daemon must be started first using create_daemon"
         ns = Pyro4.locateNS()
-        log.debug("Registing ", self.service_name)
-        print "Registing ", self.service_name
+        log.debug("Registering ", self.service_name)
+        print "Registering ", self.service_name
         ns.register(self.service_name, self.uri)
 
+    # noinspection PyMethodMayBeStatic
     def still_running(self):
         print "still running"
         return True
@@ -70,14 +77,6 @@ class PyroServiceBase(StoppableThread):
         self.pyro_daemon.shutdown()
         self.set_stop()
         print 'shutdown complete'
-
-    def put_msg(self, msg):
-        pass
-
-    @staticmethod
-    def get_file_basename(file_path):
-        default_name = os.path.basename(file_path).replace(".py", "").replace(".exe", "")
-        return default_name
 
     def get_filename(self):
         inspect_getouterframes = inspect.getouterframes(inspect.currentframe())

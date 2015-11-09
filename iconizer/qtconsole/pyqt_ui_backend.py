@@ -113,3 +113,16 @@ class PyQtGuiBackend(QtCore.QObject, GuiFactoryBase):
 
     def msg(self, msg):
         self.tray_icon.msg(msg)
+
+    def register_to_clipboard_event(self, handle):
+        clipboard = self.app.clipboard()
+        # super(PyQtGuiBackend, self).register_to_clipboard_event(handle)
+        # self.clipboard.setText(text, QtGui.QClipboard.Clipboard)
+        self.app.connect(clipboard, QtCore.SIGNAL("dataChanged()"), handle)
+        self.app.connect(clipboard, QtCore.SIGNAL("selectionChanged()"), handle)
+
+    def get_clipboard_data(self):
+        # super(PyQtGuiBackend, self).get_clipboard_data()
+        clipboard = self.app.clipboard()
+        return str(clipboard.text())
+

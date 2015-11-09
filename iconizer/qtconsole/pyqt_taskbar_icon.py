@@ -5,17 +5,16 @@ from notification import Notification
 
 
 class SystemTrayIcon(QtGui.QSystemTrayIcon):
-
     def __init__(self, icon, parent=None):
         QtGui.QSystemTrayIcon.__init__(self, icon, parent)
         self.menu = QtGui.QMenu(parent)
-        #exitAction = self.menu.addAction("Exit")
-        #exitAction.triggered.connect(self.exitHandler)
+        # exitAction = self.menu.addAction("Exit")
+        # exitAction.triggered.connect(self.exitHandler)
         self.setContextMenu(self.menu)
-    #def exitHandler(self):
-    #    QApplication.quit()
-        
-        
+        # def exitHandler(self):
+        #    QApplication.quit()
+
+
 import UserDict
 
 
@@ -24,9 +23,9 @@ class List2SystemTray(UserDict.DictMixin):
         self.system_tray_icon = SystemTrayIcon(icon, parent)
         self.system_tray_icon.show()
         self.item_to_action_dict = {}
-        #self.msg("App started")
+        # self.msg("App started")
         self.notification_window = None
-        
+
     def __setitem__(self, key, value):
         action = self.system_tray_icon.menu.addAction(key)
         action.triggered.connect(value)
@@ -34,16 +33,17 @@ class List2SystemTray(UserDict.DictMixin):
 
     def __delitem__(self, key):
         action = self.system_tray_icon.menu.removeAction(key)
-        #action.triggered.connect(value)
+        # action.triggered.connect(value)
         action.triggerd.disconnect()
         del self.item_to_action_dict[key]
-    
+
     def msg(self, msg):
-        #self.system_tray_icon.showMessage("Ufs system", msg, 20000)
+        # self.system_tray_icon.showMessage("Ufs system", msg, 20000)
         try:
             self.notification_window = Notification()
         except:
             import traceback
+
             traceback.print_exc()
         self.notification_window.noti(msg)
 
@@ -57,6 +57,7 @@ def main():
     tray_icon["Applications"] = console_man.show
     tray_icon["Exit"] = QtGui.QApplication.quit
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

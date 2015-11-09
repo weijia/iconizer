@@ -1,12 +1,12 @@
-#import traceback
+# import traceback
 import traceback
 from console_output_collector import ConsoleOutputCollector
 import os
 from iconizer.logsys.logDir import logDir, ensure_dir
 from msg_handler import GuiServiceMsgHandler
-#import webbrowser
-#import sys
-#import time
+# import webbrowser
+# import sys
+# import time
 
 
 def call_function_no_exception(func, *args):
@@ -44,9 +44,9 @@ class CrossGuiLauncher(object):
 
         self.gui_factory.set_msg_callback(self.on_msg)
         self.launched_app_dict = {}
-        #Called when user requesting closing app
+        # Called when user requesting closing app
         self.close_callback_list = []
-        #Called when app notified all sub process before app will really quit
+        # Called when app notified all sub process before app will really quit
         self.final_close_callback_list = []
         self.log_dir = log_dir
         self.python_executable = python_executable
@@ -64,19 +64,19 @@ class CrossGuiLauncher(object):
             {"checked": False, "action": self.on_app_item_selected}
 
     def on_app_item_selected(self, app_id_str):
-        #print 'selected: ', app_id
+        # print 'selected: ', app_id
         minimized = self.app_id_str_to_console_wnd[app_id_str].toggle()
         self.app_list_ui_for_app_id_str_to_app_wnd_state[app_id_str] = {"checked": not minimized,
                                                                         "action": self.on_app_item_selected}
 
     def on_quit_clicked(self):
-        #self.window.hide()
-        #self.icon.set_visible(False)
-        #print 'on_quit_clicked, send KeyInterrupts to apps'
+        # self.window.hide()
+        # self.icon.set_visible(False)
+        # print 'on_quit_clicked, send KeyInterrupts to apps'
         call_callbacks_in_list_no_exception(self.close_callback_list)
 
         print 'wait for 10 seconds'
-        #Use gui factory method, so UI will not be blocked
+        # Use gui factory method, so UI will not be blocked
         self.gui_factory.timeout(5000, self.final_quit)
 
     #######################
@@ -113,15 +113,15 @@ class CrossGuiLauncher(object):
         self.msg_handler.handle_msg(data)
 
     #######################
-    # App lauch realted
+    # App launch related
     #######################
     def execute_iconized(self, app_descriptor_dict):
         """
         Launch app in iconized mode
-        :param app_descriptor_dict: example: {"testapp_id_for_later_killing": ["d:/testapp.bat"]}
+        :param app_descriptor_dict: example: {"test_app_id_for_later_killing": ["d:/test_app.bat", "param1", "param2"]}
         :return: N/A
         """
-        #Send request to start a new app
+        # Send request to start a new app
         for key in app_descriptor_dict:
             print key, app_descriptor_dict[key]
             self.launched_app_dict[key] = {
@@ -154,9 +154,9 @@ class CrossGuiLauncher(object):
 
         self.app_id_str_to_console_wnd[app_path_and_param_gen_str] = child_wnd
         self.wnd_to_app_id_str_dict[child_wnd] = app_path_and_param_gen_str
-        #self.app_name_to_collector[app_path_and_param_gen_str] = collector
+        # self.app_name_to_collector[app_path_and_param_gen_str] = collector
         self.log_collector_to_menu_item_dict[log_collector] = child_wnd
-        #self.taskbar_icon_app[app_path_and_param_gen_str] = self.on_app_item_selected
+        # self.taskbar_icon_app[app_path_and_param_gen_str] = self.on_app_item_selected
         self.app_list_ui_for_app_id_str_to_app_wnd_state[app_path_and_param_gen_str] = \
             {"checked": False, "action": self.on_app_item_selected}
         return log_collector

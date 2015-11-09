@@ -7,9 +7,9 @@ from iconizer.qtconsole.pyqt_ui_backend import PyQtGuiBackend
 class IconizerServer(PyroServiceBase):
     def __init__(self, log_dir=None, python_executable=None):
         super(IconizerServer, self).__init__()
-        #self.launched_app_dict = {}
+        # self.launched_app_dict = {}
         self.launch_server = None
-        #Create windows
+        # Create windows
         self.gui_launch_manger = None
         self.log_dir = log_dir
         self.uri = None
@@ -27,7 +27,7 @@ class IconizerServer(PyroServiceBase):
         print "sending msg:", msg
         self.get_gui_launch_manager().send_msg(msg)
 
-    #noinspection PyMethodMayBeStatic
+    # noinspection PyMethodMayBeStatic
     def is_running(self):
         print "is_running_called"
         return True
@@ -36,13 +36,13 @@ class IconizerServer(PyroServiceBase):
     # Internal functions
     ######################
     def start_gui_no_return(self, app_descriptor_dict={}):
-        #Add closing callback, so when GUI was closing, Iconizer will got notified
+        # Add closing callback, so when GUI was closing, Iconizer will got notified
         self.add_final_close_listener(self.on_final_close)
 
-        #Start background thread running pyro service
+        # Start background thread running pyro service
         self.start()
 
-        #Execute app must be called in the main thread
+        # Execute app must be called in the main thread
         call_function_no_exception(self.get_gui_launch_manager().execute_iconized, app_descriptor_dict)
         self.get_gui_launch_manager().start_cross_gui_launcher_no_return()
 

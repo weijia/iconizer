@@ -9,14 +9,14 @@ from iconizer.qtconsole.notification import find_resource_in_pkg
 class ListViewWindow(QtGui.QWidget):
     def __init__(self):
         super(ListViewWindow, self).__init__()
-        #ui_full_path = find_file_in_product('list_ui_widget.ui')
+        # ui_full_path = find_file_in_product('list_ui_widget.ui')
         ui_full_path = find_resource_in_pkg('list_window.ui')
         self.ui = uic.loadUi(ui_full_path, self)
         self.model = QStandardItemModel()
 
         self.listView.setModel(self.model)
 
-        #self.show()
+        # self.show()
         self.listView.clicked.connect(self.item_clicked)
         self.minimized = True
         self.click_handler = None
@@ -38,13 +38,14 @@ class ItemToActionDictInListUi(UserDict.DictMixin):
     Manage items in dict way. key is the item text, value is a dict: {"checked": True, "action": callback_func}
     callback_func will accept the key as param
     """
+
     def __init__(self, list_window_class=ListDialog):
         self.ui_widget = list_window_class()
         self.ui_widget.set_click_handler(self.item_click_callback)
         self.item_to_action_dict = {}
         self.item_dict = {}
         self.key2item = {}
-        #self.ui_widget.show()
+        # self.ui_widget.show()
 
     def show(self):
         self.ui_widget.show()
@@ -56,7 +57,7 @@ class ItemToActionDictInListUi(UserDict.DictMixin):
         return ui_item
 
     def __setitem__(self, key, value):
-        #item = self.item_dict.get(key, self.new_item(key))
+        # item = self.item_dict.get(key, self.new_item(key))
 
         if key in self.item_dict:
             item = self.key2item[key]
@@ -77,5 +78,5 @@ class ItemToActionDictInListUi(UserDict.DictMixin):
         return self.key2item[key]
 
     def item_click_callback(self, str):
-        #print 'callback called:', str
+        # print 'callback called:', str
         self.item_to_action_dict[str](str)

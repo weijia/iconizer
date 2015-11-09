@@ -3,16 +3,16 @@ from PyQt4 import QtCore
 import sys
 
 
-class ConsoleOutputWndBase:
+class ConsoleOutputWndBase(object):
     def set_title(self):
         pass
 
 
-class MinimizeOnClose:
+class MinimizeOnClose(object):
+    # The closeEvent function is a standard event handler for QT to process close button in the window
     def closeEvent(self, event):
-        # Let the Exit button handle tab closing
-        #print "close event captured. Do nothing.", event
-        #"minimize"
+        # print "close event captured. Do nothing.", event
+        # "minimize"
         self.hide()
         event.ignore()
         self.minimized = True
@@ -21,7 +21,8 @@ class MinimizeOnClose:
                 self.parent.on_child_closed(self)
 
 
-class ToggleMaxMin:
+class ToggleMaxMin(object):
+
     def toggle(self):
         if not hasattr(self, 'minimized'):
             self.minimized = True
@@ -36,19 +37,19 @@ class ToggleMaxMin:
 
 class PyQtConsoleOutputWnd(QTextBrowser, MinimizeOnClose, ToggleMaxMin):
     log_updated_signal = QtCore.pyqtSignal(object)
-    #signal_registered = False
+    # signal_registered = False
 
     """
     This class manages console windows, it will kill applications for every console window.
     """
 
-    def __init__(self, parent, logFilePath=None):
-        #self.browser.setDocumentTitle('dsds')
+    def __init__(self, parent, log_file_path=None):
+        # self.browser.setDocumentTitle('dsds')
         super(PyQtConsoleOutputWnd, self).__init__()
-        #self.show()
-        #if not self.signal_registered:
-        self.log_updated_signal.connect(self.updateView)
-        #signal_registerd = True
+        # self.show()
+        # if not self.signal_registered:
+        self.log_updated_signal.connect(self.update_view)
+        # signal_registered = True
         self.parent = parent
         '''
         self.isMinimized = True
@@ -56,26 +57,26 @@ class PyQtConsoleOutputWnd(QTextBrowser, MinimizeOnClose, ToggleMaxMin):
         self.kept_text = ''
         self.stopped = False
         '''
-        if logFilePath is None:
-            self.logFile = None
+        if log_file_path is None:
+            self.log_file = None
         else:
-            self.logFile = open(logFilePath, 'w')
+            self.log_file = open(log_file_path, 'w')
 
     def set_title(self, title):
         self.setWindowTitle(title)
 
     def on_close_clicked(self, widget):
         self.parent.console_wnd_close_clicked(self)
-        #self.isMinimized = True
-        #self.window.hide()
-        #return False
+        # self.isMinimized = True
+        # self.window.hide()
+        # return False
 
-    def updateViewCallback(self, data):
+    def update_view_callback(self, data):
         self.log_updated_signal.emit(data.replace('\r\n', '\n'))
 
-    def updateView(self, data):
-        #print "updateView:", data
-        if not (self.logFile is None):
+    def update_view(self, data):
+        # print "updateView:", data
+        if not (self.log_file is None):
             try:
                 data = data.decode("gbk")
             except:
@@ -84,7 +85,7 @@ class PyQtConsoleOutputWnd(QTextBrowser, MinimizeOnClose, ToggleMaxMin):
                 except:
                     pass
             encoded_data = data.encode(sys.getdefaultencoding(), 'replace')
-            self.logFile.write(encoded_data)
+            self.log_file.write(encoded_data)
         self.append(data)
 
     '''

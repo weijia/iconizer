@@ -1,3 +1,4 @@
+from Queue import Queue
 import inspect
 import logging
 import os
@@ -15,6 +16,7 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
         self.uri = None
         self.pyro_daemon = None
         self.port = None
+        self.start_queue = Queue()
 
     def set_port(self, port):
         self.port = port
@@ -22,6 +24,7 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
     def run(self):
         self.init_service_name()
         self.create_daemon()
+        self.start_queue.put("start")
         self.launch_service_msg_loop()
 
     def launch_service_msg_loop(self):
@@ -55,8 +58,10 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
             self.pyro_daemon = Pyro4.Daemon(port=self.port)
         self.uri = self.pyro_daemon.register(self, self.service_name)
         log.debug("Pyro service uri: " + str(self.uri))
+        print("Pyro service uri: " + str(self.uri))
 
     def get_channel_full_name(self):
+        print self.uri
         return str(self.uri)
 
     def register_to_name_server(self):
@@ -84,3 +89,6 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
             inspect_getouterframes[4]
         (frame, filename, line_number, function_name, lines, index)
         return self.get_file_basename(filename)
+
+    def wait_for_channel_start(self):
+        self.start_queue.get()

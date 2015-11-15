@@ -33,6 +33,7 @@ class PyroMsgServiceProvider(MsgServiceProviderInterface):
         ch.set_port(port)
         ch.set_service_name(channel_name)
         ch.start()
+        ch.wait_for_channel_start()
         return ch
 
     ########################

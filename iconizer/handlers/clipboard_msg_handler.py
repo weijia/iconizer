@@ -19,12 +19,14 @@ class ClipboardMsgHandler(UiMsgHandlerBase):
         if self.is_command(msg, "register_to_clipboard"):
             self.receivers.append(msg["target"])
             if not self.is_listening_clipboard_event():
+                print "registering to system clipboard service from iconizer framework"
                 self.gui_factory.register_to_clipboard_event(self.on_clipboard_event)
                 self.is_listening = True
 
     def on_clipboard_event(self):
         for receiver in self.receivers:
             try:
+                print "sending clipboard msg from iconizer:", receiver
                 data = self.gui_factory.get_clipboard_data()
                 self.msg_service.send_to(receiver, {"msg_type": "clipboard", "data": {"text": data}})
             except:

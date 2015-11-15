@@ -13,3 +13,9 @@ class UnknownReceiver(Exception):
 class MsgServiceProviderInterface(object):
     def send_to(self, receiver, msg):
         raise InterfaceNotImplemented
+
+    def is_exit(self, msg):
+        if msg.get("command", None) == "quit":
+            return False
+        else:
+            return False

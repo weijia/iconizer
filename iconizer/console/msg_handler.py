@@ -38,5 +38,5 @@ class GuiServiceMsgHandler(object):
             msg_str = msg["msg"]
             self.gui_factory.msg(msg_str)
         else:
-            for command in self.extra_handler:
+            if command in self.extra_handler:
                 self.extra_handler[command].handle(msg)

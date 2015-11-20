@@ -1,10 +1,11 @@
+import logging
 import Pyro4
 from Pyro4.errors import NamingError
 from iconizer.msg_service.msg_service_interface.msg_service_provider_interface import MsgServiceProviderInterface, \
     UnknownReceiver
 from iconizer.msg_service.pyro_msg_service.pyro_receiver import PyroReceiver
 from iconizer.msg_service.pyro_msg_service.pyro_receiver_base import InvalidPyroReceiver
-from iconizer.pyro_service_base import PyroServiceBase
+# from iconizer.pyro_service_base import PyroServiceBase
 
 __author__ = 'weijia'
 
@@ -27,6 +28,7 @@ class PyroMsgServiceProvider(MsgServiceProviderInterface):
             proxy.put_msg(msg)
         else:
             raise InvalidPyroReceiver
+        logging.getLogger(__file__).info("Sending: " + str(msg))
 
     def create_channel(self, channel_name, port=None):
         ch = PyroReceiver()

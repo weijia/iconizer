@@ -33,4 +33,4 @@ class DropWndHandlerV2(DropWndHandler):
         # msg_service = AutoRouteMsgService()
         # msg_service.send_to(target, {"command": "dropped", "urls": urls})
 
-        self.msg_service.send_to(target, {"command": "dropped", "urls": urls})
+        self.msg_service.send_to(target, {"command": "dropped", "urls": urls, "msg_type": "drop"})

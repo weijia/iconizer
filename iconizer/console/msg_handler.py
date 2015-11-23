@@ -19,7 +19,7 @@ class GuiServiceMsgHandler(object):
                               "DestroyDropWnd": self.drop_wnd_cmd_handler,
                               "DropWndV2": self.drop_wnd_cmd_handler_v2,
                               "DestroyDropWndV2": self.drop_wnd_cmd_handler_v2,
-                              "clipboard_register": self.clipboard_cmd_handler,
+                              "register_to_clipboard": self.clipboard_cmd_handler,
                               }
 
     def handle_msg(self, msg):

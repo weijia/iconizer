@@ -1,5 +1,6 @@
 from iconizer.console.drop_wnd_handler import DropWndHandler
 # from iconizer.msg_service.auto_route_msg_service import AutoRouteMsgService
+from iconizer.msg_service.msg_def.file_url_list_msg import DropEventMsg
 from iconizer.msg_service.msg_service_interface.msg_service_factory_interface import MsgServiceFactory
 
 
@@ -33,4 +34,6 @@ class DropWndHandlerV2(DropWndHandler):
         # msg_service = AutoRouteMsgService()
         # msg_service.send_to(target, {"command": "dropped", "urls": urls})
 
-        self.msg_service.send_to(target, {"command": "dropped", "urls": urls, "msg_type": "drop"})
+        drop_msg = DropEventMsg()
+        drop_msg.set_file_url_list(urls)
+        self.msg_service.send_to(target, drop_msg.data)

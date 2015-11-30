@@ -3,11 +3,12 @@ from UserDict import UserDict
 
 class CmdMsgBase(UserDict):
     command = None
-    msg_type = []
+    msg_type = None
 
     def __init__(self, dict_param=None, **kwargs):
         UserDict.__init__(self, dict_param, **kwargs)
         self.set_cmd(self.command)
+        self.set_msg_type(self.msg_type)
 
     def set_cmd(self, cmd):
         self.__setitem__("command", cmd)

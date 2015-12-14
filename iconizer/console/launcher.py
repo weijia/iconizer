@@ -123,6 +123,9 @@ class CrossGuiLauncher(object):
         """
         # Send request to start a new app
         for key in app_descriptor_dict:
+            if key in self.launched_app_dict:
+                print "Application named: %s is already occupied" % key
+                return
             print key, app_descriptor_dict[key]
             self.launched_app_dict[key] = {
                 "collector": self.create_console_wnd_for_app(app_descriptor_dict[key]),

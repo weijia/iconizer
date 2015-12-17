@@ -2,11 +2,23 @@ import threading
 import subprocess
 import os
 from iconizer.win import sysprocess
-
-CREATE_NO_WINDOW = 0x8000000
 import iconizer.logsys.logDir as logDir
 from iconizer.logsys.logSys import *
 import traceback
+
+CREATE_NO_WINDOW = 0x8000000
+
+
+def decode_str(read_data):
+    try:
+        read_data = read_data.decode("gbk")
+    except:
+        try:
+            read_data = read_data.decode("utf8")
+        except:
+            pass
+            # print 'after readline'
+    return read_data
 
 
 class ConsoleCollectWorkerThread(threading.Thread):
@@ -35,32 +47,25 @@ class ConsoleCollectWorkerThread(threading.Thread):
         f = self.open_log_if_needed()
         while not self.quitFlag:
             # print 'before readline'
-            err = self.file_descriptor.readline()
-            try:
-                err = err.decode("gbk")
-            except:
-                try:
-                    err = err.decode("utf8")
-                except:
-                    pass
-                    # print 'after readline'
-            if err == '':
-                # print 'err is empty'
+            read_data = self.file_descriptor.readline()
+            read_data = decode_str(read_data)
+            if read_data == '':
+                # print 'read_data is empty'
                 self.quit()
-            if err is None:
+            if read_data is None:
                 self.quit()
                 # print 'quit'
                 break
             if self.output_to_console:
-                # print 'got output:', self.appname, ':  ',err
-                info(err)
+                # print 'got output:', self.appname, ':  ',read_data
+                info(read_data)
                 pass
             if not (f is None):
                 try:
-                    f.write(err)
+                    f.write(read_data)
                 except:
                     pass
-            self.target.update_view_callback(err)
+            self.target.update_view_callback(read_data)
         if not (f is None):
             f.close()
         print 'quitting run: ', self.app_name

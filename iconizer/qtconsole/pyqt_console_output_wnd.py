@@ -2,6 +2,8 @@ from PyQt4.QtGui import QApplication, QTextBrowser
 from PyQt4 import QtCore
 import sys
 
+from iconizer.console.console_output_collector import decode_str
+
 
 class ConsoleOutputWndBase(object):
     def set_title(self):
@@ -77,16 +79,11 @@ class PyQtConsoleOutputWnd(QTextBrowser, MinimizeOnClose, ToggleMaxMin):
     def update_view(self, data):
         # print "updateView:", data
         if not (self.log_file is None):
-            try:
-                data = data.decode("gbk")
-            except:
-                try:
-                    data = data.decode("utf8")
-                except:
-                    pass
+            decode_str(data)
             encoded_data = data.encode(sys.getdefaultencoding(), 'replace')
             self.log_file.write(encoded_data)
-        self.append(data)
+        for line in data.split("\n")[0:-1]:
+            self.append(line)
 
     '''
     def closeEvent(self,event):

@@ -16,3 +16,15 @@ class DropTargetRegMsg(CmdMsgBase):
 class DropEventMsg(FileUrlListMsg):
     command = "drop"
     msg_type = "drop"
+
+
+class DelayedPullRequest(CmdMsgBase):
+    command = "delayed_pull_request"
+
+
+class TagEnumeratorMsg(CmdMsgBase):
+    command = "tag_enumerator_msg"
+
+
+class FolderChangeNotification(CmdMsgBase):
+    command = "folder_change"

@@ -13,4 +13,6 @@ class PyroReceiver(PyroServiceBase):
         self.cached_msg.put_nowait(msg)
 
     def get_msg(self):
-        return self.cached_msg.get()
+        item = self.cached_msg.get()
+        self.cached_msg.task_done()  # task_done must be called if join will be called (according to python doc)
+        return item

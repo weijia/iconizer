@@ -1,3 +1,5 @@
+import time
+
 from iconizer.msg_service.msg_def.cmd_msg_base import CmdMsgBase
 
 
@@ -18,7 +20,7 @@ class DropEventMsg(FileUrlListMsg):
     msg_type = "drop"
 
 
-class DelayedPullRequest(CmdMsgBase):
+class DelayedMsg(CmdMsgBase):
     command = "delayed_pull_request"
 
 
@@ -28,3 +30,8 @@ class TagEnumeratorMsg(CmdMsgBase):
 
 class FolderChangeNotification(CmdMsgBase):
     command = "folder_change"
+
+
+def send_delayed_msg(channel, delay_seconds=5):
+    time.sleep(delay_seconds)
+    channel.put_msg(DelayedMsg())

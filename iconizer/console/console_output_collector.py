@@ -123,13 +123,9 @@ class ConsoleOutputCollector(object):
         return target_python_executable
 
     def run_app_in_window(self, target, cwd, app_or_script_path_and_param_list):
-        self.app_full_path = app_or_script_path_and_param_list
-        if type(self.app_full_path) == list:
-            self.app_full_path = os.path.abspath(self.app_full_path[0])
-            if not os.path.exists(self.app_full_path):
-                # Do not execute if the file does not exist
-                print "%s does not exist" % self.app_full_path
-                return
+        if not self.is_app_or_script_exists(app_or_script_path_and_param_list):
+            print "%s does not exist" % self.app_full_path
+            return
         self.validate_cur_working_dir(cwd)
         self.console_window = target
 
@@ -145,6 +141,19 @@ class ConsoleOutputCollector(object):
             print 'launch exception'
             # self.appStarted = True
 
+    def is_app_or_script_exists(self, app_or_script_path_and_param_list):
+        self.app_full_path = app_or_script_path_and_param_list
+        if type(self.app_full_path) == list:
+            possible_installed_python_script = os.path.join(os.path.dirname(self.get_python_executable()),
+                                                            self.app_full_path[0])
+            if os.path.exists(possible_installed_python_script):
+                self.app_full_path = possible_installed_python_script
+                return True
+            self.app_full_path = os.path.abspath(self.app_full_path[0])
+            if os.path.exists(self.app_full_path):
+                return True
+        return False
+
     def set_window_title(self, app_or_script_path_and_param_list):
         try:
             self.console_window.set_title(str(app_or_script_path_and_param_list))
@@ -155,7 +164,7 @@ class ConsoleOutputCollector(object):
 
     def start_app_and_collect_logs(self, app_or_script_path_and_param_list, console_window):
         # print self.real_execute_path_and_param_list
-        self.validate_executable_path()
+        # self.validate_executable_path()  # the path is already checked in run_app_in_window
         p = subprocess.Popen(self.real_execute_path_and_param_list, cwd=self.cwd, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, bufsize=0,
                              creationflags=CREATE_NO_WINDOW)
@@ -190,9 +199,9 @@ class ConsoleOutputCollector(object):
             pass
             # print 'taskid:%d, pid:%d'%(int(p._handle), int(p.pid))
 
-    def validate_executable_path(self):
-        if not os.path.exists(self.real_execute_path_and_param_list[0]):
-            print "path does not exist: ", self.real_execute_path_and_param_list[0]
+    # def validate_executable_path(self):
+    #     if not os.path.exists(self.real_execute_path_and_param_list[0]):
+    #         print "path does not exist: ", self.real_execute_path_and_param_list[0]
 
     def validate_cur_working_dir(self, cwd):
         self.cwd = cwd

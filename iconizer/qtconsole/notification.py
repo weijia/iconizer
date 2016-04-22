@@ -4,15 +4,17 @@ from iconizer.qtconsole.fileTools import find_resource_in_pkg
 from pyqt_console_output_wnd import MinimizeOnClose, ToggleMaxMin
 from PyQt4 import QtCore, QtGui, uic
 
+
 class Notification(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):
     def __init__(self):
         super(Notification, self).__init__()
         ui_full_path = find_resource_in_pkg('notification.ui')
         self.ui = uic.loadUi(ui_full_path, self)
 
-        #self.show()
+        # self.show()
 
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint|QtCore.Qt.Tool|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
+        self.setWindowFlags(
+            QtCore.Qt.CustomizeWindowHint | QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
         self.vertical_adjust = 200
         self.max_cnt = 350
         size = self.geometry()
@@ -33,7 +35,7 @@ class Notification(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):
         self.filter = mouseoverEvent(self)
         self.webView.installEventFilter(self.filter)
         '''
-        
+
     def timeout(self):
         self.cnt += 1
         if self.cnt > self.max_cnt:
@@ -55,51 +57,52 @@ class Notification(QtGui.QWidget, MinimizeOnClose, ToggleMaxMin):
                 self.not_over = True
             '''
             point = QtGui.QCursor.pos()
-            if (point.x() > self.x) and (point.y() > self.y) and (point.x() < self.x + self.width) and (point.y() < self.y + self.height):
-                #print 'over window'
+            if (point.x() > self.x) and (point.y() > self.y) and (point.x() < self.x + self.width) and (
+                point.y() < self.y + self.height):
+                # print 'over window'
                 self.cnt -= 1
                 pass
             else:
-                #print point.x(), point.y(), self.x, self.y, self.width, self.height
+                # print point.x(), point.y(), self.x, self.y, self.width, self.height
                 self.disappear()
 
     def noti(self, msg):
-        self.noti_html('<body><div style="word-wrap: break-word;">notify:%s</div></body>'%(msg))
-        
+        self.noti_html('<body><div style="word-wrap: break-word;">notify:%s</div></body>' % (msg))
+
     def noti_html(self, msg):
         self.webView.setHtml(msg)
         self.ctimer = QtCore.QTimer()
         # constant timer
         QtCore.QObject.connect(self.ctimer, QtCore.SIGNAL("timeout()"), self.timeout)
         milliseconds = 1
-        #Will trigger again and again. use self.ctimer.singleShot(milliseconds, callback) to get a single shot callback
+        # Will trigger again and again. use self.ctimer.singleShot(milliseconds, callback) to get a single shot callback
         self.ctimer.start(milliseconds)
         self.init_x()
         self.cnt = 0
         self.f = 1
 
-    #The following codes are copied from Pyqt-Notification- on github.
+    # The following codes are copied from Pyqt-Notification- on github.
     def init_x(self):
-        if True:#try:
+        if True:  # try:
             from ctypes import windll
             user32 = windll.user32
-            #Get X coordinate of screen
+            # Get X coordinate of screen
             self.x = user32.GetSystemMetrics(0)
             self.y = user32.GetSystemMetrics(1) - self.vertical_adjust
-        else:#except:
+        else:  # except:
             cp = QtGui.QDesktopWidget().availableGeometry()
-            self.x = cp.width()    
+            self.x = cp.width()
             self.y = cp.height() - self.vertical_adjust
 
-    #Reduce opacity of the window
+    # Reduce opacity of the window
     def disappear(self):
         self.f -= 0.02
         self.setWindowOpacity(self.f)
         return
 
-    #Move in animation
+    # Move in animation
     def animate(self):
-        #print '----------------------', self.x
+        # print '----------------------', self.x
         self.move(self.x, self.y)
         self.x -= 1
         return

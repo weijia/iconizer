@@ -2,6 +2,7 @@ import sys
 from PyQt4 import QtGui
 from iconizer.qtconsole.list_window import ItemToActionDictInListUi
 from notification import Notification
+import UserDict
 
 
 class SystemTrayIcon(QtGui.QSystemTrayIcon):
@@ -13,9 +14,6 @@ class SystemTrayIcon(QtGui.QSystemTrayIcon):
         self.setContextMenu(self.menu)
         # def exitHandler(self):
         #    QApplication.quit()
-
-
-import UserDict
 
 
 class List2SystemTray(UserDict.DictMixin):

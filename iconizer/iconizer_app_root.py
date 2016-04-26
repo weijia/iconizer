@@ -10,18 +10,21 @@ from libtool.app_framework import AppConfig
 
 
 class IconizerAppRoot(object):
-    front_end_task = dict()  # {"postgre_sql": ["scripts\\postgresql.bat"]}
-    background_tasks = tuple()  # ({"web_server": ["manage.py", "runserver", "8110"]},)
-    app_root_folder_name = "."
-    log_folder = "logs"
-    cleanup_tasks = tuple()  # [{"stop_postgre_sql": ["scripts\\postgresql_stop.bat"]}]
-
     def __init__(self):
         super(IconizerAppRoot, self).__init__()
+        self.init_parameters()
         self.app = AppConfig(os.path.realpath(__file__), self.app_root_folder_name)
-        self.log_folder = self.app.get_or_create_app_data_folder(self.log_folder)
-        self.iconizer = Iconizer(self.log_folder)
+        self.log_folder_full_path = self.app.get_or_create_app_data_folder(self.log_folder)
+        self.iconizer = Iconizer(self.log_folder_full_path)
         self.client = IconizerClient()
+
+    # noinspection PyAttributeOutsideInit
+    def init_parameters(self):
+        self.front_end_task = dict()  # {"postgre_sql": ["scripts\\postgresql.bat"]}
+        self.background_tasks = tuple()  # ({"web_server": ["manage.py", "runserver", "8110"]},)
+        self.app_root_folder_name = "."
+        self.cleanup_tasks = tuple()  # [{"stop_postgre_sql": ["scripts\\postgresql_stop.bat"]}]
+        self.log_folder = "logs"
 
     def start_iconized_applications(self):
         try:

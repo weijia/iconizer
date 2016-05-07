@@ -6,25 +6,29 @@ from Pyro4.errors import CommunicationError
 
 from iconizer import Iconizer
 from iconizer.iconizer_client import IconizerClient
-from libtool.app_framework import AppConfig
+from ufs_tools.app_framework import AppConfig
 
 
+# noinspection PyMethodMayBeStatic
 class IconizerAppRoot(object):
+    app_root_folder_name = "server_for_django_15_and_below"
+    log_folder_name = "logs"
+
     def __init__(self):
         super(IconizerAppRoot, self).__init__()
-        self.init_parameters()
+        self.front_end_task = self.get_frontend_task_descriptor()  # {"postgresql": ["scripts\\postgresql.bat"]}
+        self.background_tasks = self.get_background_tasks()  # ({"web_server": ["manage.py", "runserver", "8110"]},)
+        self.cleanup_tasks = self.get_cleanup_task_descriptors()
         self.app = AppConfig(os.path.realpath(__file__), self.app_root_folder_name)
-        self.log_folder_full_path = self.app.get_or_create_app_data_folder(self.log_folder)
+        self.log_folder_full_path = self.app.get_or_create_app_data_folder(self.log_folder_name)
         self.iconizer = Iconizer(self.log_folder_full_path)
         self.client = IconizerClient()
 
-    # noinspection PyAttributeOutsideInit
-    def init_parameters(self):
-        self.front_end_task = dict()  # {"postgre_sql": ["scripts\\postgresql.bat"]}
-        self.background_tasks = tuple()  # ({"web_server": ["manage.py", "runserver", "8110"]},)
-        self.app_root_folder_name = "."
-        self.cleanup_tasks = tuple()  # [{"stop_postgre_sql": ["scripts\\postgresql_stop.bat"]}]
-        self.log_folder = "logs"
+    def get_cleanup_task_descriptors(self):
+        """
+        :return: # [{"stop_postgresql": ["scripts\\postgresql_stop.bat"]}]
+        """
+        return tuple()
 
     def start_iconized_applications(self):
         try:
@@ -70,3 +74,9 @@ class IconizerAppRoot(object):
 
     def sync_to_main_thread(self):
         pass
+
+    def get_frontend_task_descriptor(self):
+        return {}
+
+    def get_background_tasks(self):
+        return []

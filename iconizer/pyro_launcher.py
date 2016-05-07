@@ -1,4 +1,4 @@
-from libtool.filetools import find_callable_in_app_framework, get_app_name_from_full_path
+from ufs_tools.filetools import find_callable_in_app_framework, get_app_name_from_full_path
 from iconizer_main import Iconizer
 
 

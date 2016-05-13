@@ -21,4 +21,4 @@ class DjangoServer(object):
         return "python %s %s" % (self.django_manage_script, cmd_name)
 
     def execute_cmd(self, django_cmd):
-        os.system(self.django_task_descriptor_generator.get_cmd_str(django_cmd))
+        os.system(self.get_cmd_str(django_cmd))

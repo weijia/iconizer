@@ -1,5 +1,4 @@
 from iconizer.django_in_iconizer.django_server import DjangoServer
-from iconizer.django_in_iconizer.postgresql_checker import PostgreSqlChecker
 from iconizer.iconizer_app_root import IconizerAppRoot
 
 

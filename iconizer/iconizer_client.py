@@ -13,6 +13,11 @@ class IconizerClient(object):
         self.msg_service = None
 
     def execute_in_remote(self, app_descriptor_dict):
+        """
+        Start an task in remote
+        :param app_descriptor_dict: {"task name", ["app full path", "param1", "param2"]}
+        :return:
+        """
         self.init_msg_service()
         self.msg_service.send_to(ICONIZER_SERVICE_NAME, {"command": "launch", "apps": app_descriptor_dict})
 

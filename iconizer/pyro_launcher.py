@@ -4,13 +4,14 @@ from iconizer_main import Iconizer
 
 class Launcher(object):
     @staticmethod
-    def start_app_with_name_param_list_no_wait(app_name, param_list=[]):
+    def start_app_with_name_param_list_no_wait(app_name, param_list=None):
         """
         Only app's name should be specified, even the extension will not be included in app_name
         :param app_name:
         :param param_list:
         :return:
         """
+        param_list = param_list or []
         app_path = find_callable_in_app_framework(app_name)
         # print app_path
         app_path_and_param = [app_path, ]

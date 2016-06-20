@@ -12,7 +12,8 @@ class DjangoServer(object):
             self.django_manage_script = django_manage_script
         self.django_manage_script = os.environ.get("MANAGE_PY", self.django_manage_script)
 
-    def get_task_descriptor(self, task_name, param_list=[]):
+    def get_task_descriptor(self, task_name, param_list=None):
+        param_list = param_list or None
         task_name_and_param = [self.django_manage_script, task_name]
         task_name_and_param.extend(param_list)
         return {task_name: task_name_and_param}

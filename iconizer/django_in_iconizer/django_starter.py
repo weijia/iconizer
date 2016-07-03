@@ -1,18 +1,22 @@
 import os
 
 from ufs_tools import get_folder
+from ufs_tools.app_framework import get_executable_folder, get_executable
 from ufs_tools.inspect_utils import get_inspection_frame
 
-from iconizer.django_in_iconizer.django_server import DjangoServer
+from iconizer.django_in_iconizer.django_server import DjangoServer, DjangoServerExe
 from iconizer.iconizer_app_root import IconizerAppRoot
 
 
 class DjangoStarter(IconizerAppRoot):
-    django_main_script_name = "manage.py"
     app_root_folder_name = "server_for_django_15_and_below"
 
     def __init__(self):
-        self.django_server = DjangoServer(self.django_main_script_name)
+        p = get_executable()
+        if "python.exe" in p or ".py" in p:
+            self.django_server = DjangoServer()
+        else:
+            self.django_server = DjangoServerExe()
         root_folder_name = os.path.basename(get_folder(get_inspection_frame(2)))
         print "root folder name:", root_folder_name
         super(DjangoStarter, self).__init__(root_folder_name)

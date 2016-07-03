@@ -1,11 +1,15 @@
 import os
 
+import sys
+
+from ufs_tools.app_framework import get_executable_folder
+
 
 def find_resource_in_sub_folders(filename):
-    p = os.getcwd()
+    p = get_executable_folder()
     for dirpath, dirnames, filenames in os.walk(p):
         if filename in filenames:
-            # print 'find file:', os.path.join(dirpath, filename)
+            print 'find file:', os.path.join(dirpath, filename)
             return os.path.join(dirpath, filename)
 
 

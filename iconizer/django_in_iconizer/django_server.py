@@ -1,11 +1,9 @@
 import os
 
 
-class DjangoServer(object):
-    default_django_manage_script = "manage.py"
-
+class DjangoServerBase(object):
     def __init__(self, django_manage_script=None):
-        super(DjangoServer, self).__init__()
+        super(DjangoServerBase, self).__init__()
         if django_manage_script is None:
             self.django_manage_script = self.default_django_manage_script
         else:
@@ -17,9 +15,21 @@ class DjangoServer(object):
         task_name_and_param.extend(param_list)
         return {task_name: task_name_and_param}
 
+    def execute_cmd(self, django_cmd):
+        os.system(self.get_cmd_str(django_cmd))
+
+
+class DjangoServer(DjangoServerBase):
+    default_django_manage_script = "manage.py"
+
     # noinspection PyMethodMayBeStatic
     def get_cmd_str(self, cmd_name, param_list=[]):
         return "python %s %s" % (self.django_manage_script, cmd_name)
 
-    def execute_cmd(self, django_cmd):
-        os.system(self.get_cmd_str(django_cmd))
+
+class DjangoServerExe(DjangoServerBase):
+    default_django_manage_script = "manage.exe"
+
+    # noinspection PyMethodMayBeStatic
+    def get_cmd_str(self, cmd_name, param_list=[]):
+        return "%s %s" % (self.django_manage_script, cmd_name)

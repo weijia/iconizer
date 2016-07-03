@@ -19,6 +19,7 @@ class DjangoServerBase(object):
         return {task_name: task_name_and_param}
 
     def execute_cmd(self, django_cmd):
+        print "!!!!!!!!!!!!!!! cur folder:", os.getcwd()
         os.system(self.get_cmd_str(django_cmd))
 
 
@@ -38,7 +39,8 @@ class DjangoServerExe(DjangoServerBase):
 
     # noinspection PyMethodMayBeStatic
     def get_cmd_str(self, cmd_name, param_list=[]):
-        return "%s %s" % (self.django_manage_script, cmd_name)
+        exe_folder = get_executable_folder()
+        return "%s %s" % (os.path.join(exe_folder, self.django_manage_script), cmd_name)
 
     # noinspection PyMethodMayBeStatic
     def get_run_server_task_descriptor(self, params=None):

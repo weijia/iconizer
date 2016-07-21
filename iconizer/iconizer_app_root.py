@@ -11,17 +11,14 @@ from ufs_tools.app_framework import AppConfig
 
 # noinspection PyMethodMayBeStatic
 class IconizerAppRoot(object):
-    default_app_root_folder_name = "server_for_django_15_and_below"
     log_folder_name = "logs"
 
-    def __init__(self, app_root_folder_name=None):
+    def __init__(self, app_root_folder=None):
         super(IconizerAppRoot, self).__init__()
         self.front_end_task = self.get_frontend_task_descriptor()  # {"postgresql": ["scripts\\postgresql.bat"]}
         self.background_tasks = self.get_background_tasks()  # ({"web_server": ["manage.py", "runserver", "8110"]},)
         self.cleanup_tasks = self.get_cleanup_task_descriptors()
-        if app_root_folder_name is None:
-            app_root_folder_name = self.default_app_root_folder_name
-        self.app = AppConfig(os.path.realpath(__file__), app_root_folder_name)
+        self.app = AppConfig(app_root_folder)
         self.log_folder_full_path = self.app.get_or_create_app_data_folder(self.log_folder_name)
         self.iconizer = Iconizer(self.log_folder_full_path)
         self.client = IconizerClient()

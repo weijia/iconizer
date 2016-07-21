@@ -1,6 +1,6 @@
 import os
 
-from ufs_tools.app_framework import get_executable_folder
+from ufs_tools.app_tools import get_executable_folder
 
 
 class DjangoServerBase(object):

@@ -1,7 +1,7 @@
 import os
 
 from ufs_tools import get_folder
-from ufs_tools.app_framework import get_executable_folder, get_executable
+from ufs_tools.app_tools import get_executable
 from ufs_tools.inspect_utils import get_inspection_frame
 
 from iconizer.django_in_iconizer.django_server import DjangoServer, DjangoServerExe

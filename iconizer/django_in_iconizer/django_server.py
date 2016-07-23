@@ -1,5 +1,6 @@
 import os
 
+from ufs_tools import main_is_frozen
 from ufs_tools.app_tools import get_executable_folder
 
 
@@ -38,6 +39,8 @@ class DjangoServer(DjangoServerBase):
         return "python %s %s" % (self.django_manage_script, cmd_name)
 
     def get_run_server_task_descriptor(self, params=None):
+        if main_is_frozen():
+            return self.get_task_descriptor("runserver", ["0.0.0.0:8110", "--no-reload"])
         return self.get_task_descriptor("runserver", ["0.0.0.0:8110"])
 
 

@@ -1,8 +1,5 @@
 import os
-
-import sys
-
-from ufs_tools.app_framework import get_executable_folder
+from ufs_tools.app_tools import get_executable_folder
 
 
 def find_resource_in_sub_folders(filename):

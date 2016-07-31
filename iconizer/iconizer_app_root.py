@@ -23,29 +23,37 @@ class IconizerAppRoot(object):
         self.iconizer = Iconizer(self.log_folder_full_path)
         self.client = IconizerClient()
 
-    def get_cleanup_task_descriptors(self):
-        """
-        :return: # [{"stop_postgresql": ["scripts\\postgresql_stop.bat"]}]
-        """
-        return tuple()
-
     def start_iconized_applications(self):
         try:
             threading.Thread(target=self.start_task_starter).start()
-            # i.start_name_server()
-            # i.add_close_listener(stop_services_and_web_servers)
-            # i.add_final_close_listener(stop_postgresql)
-            # i.get_gui_launch_manager().taskbar_icon_app["Open Main Page"] = open_main
-
-            # i.execute({"new_ext_svr": [find_callable_in_app_framework("new_ext_svr")]})
-            self.iconizer.add_final_close_listener(self.final_cleanup)
+            # self.iconizer.add_final_close_listener(self.final_cleanup)
+            self.iconizer.add_close_listener(self.final_cleanup)
             self.iconizer.execute(self.front_end_task)
 
         except (KeyboardInterrupt, SystemExit):
             raise
             # print "stopping database"
 
+    def get_cleanup_task_descriptors(self):
+        """
+        :return: # [{"stop_postgresql": ["scripts\\postgresql_stop.bat"]}]
+        """
+        return tuple()
+
     def start_task_starter(self):
+        self.wait_for_pyro_server()
+        self.sync_to_main_thread()
+        self.start_background_tasks()
+
+    def start_background_tasks(self):
+        print "executing in remote!!!!!!"
+        try:
+            self.execute_tasks(self.background_tasks)
+        except:
+            traceback.print_exc()
+            pass
+
+    def wait_for_pyro_server(self):
         cnt = 100
         while True:
             if cnt < 0:
@@ -56,13 +64,6 @@ class IconizerAppRoot(object):
             except CommunicationError:
                 continue
             cnt -= 1
-        self.sync_to_main_thread()
-        print "executing in remote!!!!!!"
-        try:
-            self.execute_tasks(self.background_tasks)
-        except:
-            traceback.print_exc()
-            pass
 
     def execute_tasks(self, tasks):
         for task in tasks:

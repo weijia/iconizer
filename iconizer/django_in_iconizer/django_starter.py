@@ -9,7 +9,6 @@ from iconizer.iconizer_app_root import IconizerAppRoot
 
 
 class DjangoStarter(IconizerAppRoot):
-    app_root_folder_name = "server_for_django_15_and_below"
 
     def __init__(self):
         app_executable_full_path = get_executable()
@@ -23,5 +22,7 @@ class DjangoStarter(IconizerAppRoot):
         super(DjangoStarter, self).__init__(root_folder)
 
     def init_ufs_db(self):
+        # self.django_server.execute_cmd("migrate auth")
+        # self.django_server.execute_cmd("migrate sites")
         self.django_server.execute_cmd("migrate")
         self.django_server.execute_cmd("create_default_super_user")

@@ -2,9 +2,7 @@ from iconizer.django_in_iconizer.django_starter import DjangoStarter
 from iconizer.django_in_iconizer.postgresql_checker import PostgreSqlChecker
 
 
-class DjangoPostgresqlStarter(DjangoStarter):
-    django_main_script_name = "manage_with_conf.py"
-    app_root_folder_name = "server_for_django_15_and_below"
+class DjangoPostgreSqlStarter(DjangoStarter):
 
     def get_cleanup_task_descriptors(self):
         return [{"stop_postgresql": ["scripts\\postgresql_stop.bat"]}]

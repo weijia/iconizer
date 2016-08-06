@@ -6,7 +6,7 @@ def find_resource_in_sub_folders(filename):
     p = get_executable_folder()
     for dirpath, dirnames, filenames in os.walk(p):
         if filename in filenames:
-            print 'find file:', os.path.join(dirpath, filename)
+            # print 'find file:', os.path.join(dirpath, filename)
             return os.path.join(dirpath, filename)
 
 

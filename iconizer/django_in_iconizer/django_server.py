@@ -27,10 +27,10 @@ class DjangoServerBase(object):
         return {task_name: task_name_and_param}
 
     def execute_cmd(self, django_cmd):
-        print "!!!!!!!!!!!!!!! cur folder:", os.getcwd()
+        # print "!!!!!!!!!!!!!!! cur folder:", os.getcwd()
         try:
             cmd_str = self.get_cmd_str(django_cmd)
-            print cmd_str
+            # print cmd_str
             os.system(cmd_str)
         except:
             import traceback

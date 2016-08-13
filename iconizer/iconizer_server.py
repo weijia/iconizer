@@ -1,3 +1,5 @@
+from Pyro4 import expose
+
 from iconizer.iconizer_consts import ICONIZER_SERVICE_NAME
 from iconizer.msg_service.pyro_msg_service.pyro_receiver_base import PyroReceiverBase
 from iconizer.pyro_service_base import PyroServiceBase
@@ -21,6 +23,7 @@ class IconizerServer(PyroServiceBase):
     #########################
     # Called through pyro only
     #########################
+    @expose
     def put_msg(self, msg):
         """
         Send command msg to GUI
@@ -29,6 +32,7 @@ class IconizerServer(PyroServiceBase):
         self.get_gui_launch_manager().send_msg(msg)
 
     # noinspection PyMethodMayBeStatic
+    @expose
     def is_running(self):
         print "is_running_called"
         return True

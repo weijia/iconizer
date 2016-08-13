@@ -4,7 +4,7 @@ import traceback
 
 from Pyro4.errors import CommunicationError
 
-from iconizer import Iconizer
+from iconizer.iconizer_main import Iconizer
 from iconizer.iconizer_client import IconizerClient
 from ufs_tools.app_framework import AppConfig
 

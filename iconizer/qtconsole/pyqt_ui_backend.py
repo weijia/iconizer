@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from iconizer.qtconsole.list_window import ItemToActionDictInListUi
+from item_to_action_dict_in_list_ui import ItemToActionDictInListUi
 from pyqt_console_output_wnd import PyQtConsoleOutputWnd, MinimizeOnClose, ToggleMaxMin
 import PyQt4.QtGui as QtGui
 from PyQt4.QtCore import *

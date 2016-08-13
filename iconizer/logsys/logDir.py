@@ -59,11 +59,15 @@ class logDir:
             #Delete old ones
             for i in numberList[0:deleteLen + 1]:
                 #print 'deleting:', i
-                try:
-                    os.remove(os.path.join(self.logFullPath, fileList[i]))
-                except WindowsError:
-                    pass
+                log_full_path = os.path.join(self.logFullPath, fileList[i])
+                self.remove_path(log_full_path)
         return getTimestampWithFreeName(self.logFullPath, '.log')
+
+    def remove_path(self, log_full_path):
+        try:
+            os.remove(log_full_path)
+        except:
+            pass
 
 
 if __name__ == '__main__':

@@ -1,3 +1,5 @@
+from Pyro4 import expose
+
 from iconizer.msg_service.msg_service_interface.msg_service_provider_interface import InterfaceNotImplemented
 
 __author__ = 'weijia'
@@ -8,6 +10,7 @@ class PyroReceiverBase(object):
     def put_msg(self, msg):
         raise InterfaceNotImplemented
 
+    @expose
     def is_pyro_receiver(self):
         return True
 

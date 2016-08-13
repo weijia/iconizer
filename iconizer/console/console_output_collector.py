@@ -1,24 +1,14 @@
 import threading
 import subprocess
 import os
+
+from iconizer.iconizer_utils.str_utils import decode_str
 from iconizer.win import sysprocess
 import iconizer.logsys.logDir as logDir
 from iconizer.logsys.logSys import *
 import traceback
 
 CREATE_NO_WINDOW = 0x8000000
-
-
-def decode_str(read_data):
-    try:
-        read_data = read_data.decode("gbk")
-    except:
-        try:
-            read_data = read_data.decode("utf8")
-        except:
-            pass
-            # print 'after readline'
-    return read_data
 
 
 class ConsoleCollectWorkerThread(threading.Thread):

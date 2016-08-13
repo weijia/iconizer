@@ -1,14 +1,17 @@
 import sys
-from PyQt4 import QtGui
-from iconizer.qtconsole.list_window import ItemToActionDictInListUi
+# from PyQt4 import QtGui
+from Qt import QtGui
+from PyQt4.QtGui import *
+
+from item_to_action_dict_in_list_ui import ItemToActionDictInListUi
 from notification import Notification
 import UserDict
 
 
-class SystemTrayIcon(QtGui.QSystemTrayIcon):
+class SystemTrayIcon(QSystemTrayIcon):
     def __init__(self, icon, parent=None):
-        QtGui.QSystemTrayIcon.__init__(self, icon, parent)
-        self.menu = QtGui.QMenu(parent)
+        QSystemTrayIcon.__init__(self, icon, parent)
+        self.menu = QMenu(parent)
         # exitAction = self.menu.addAction("Exit")
         # exitAction.triggered.connect(self.exitHandler)
         self.setContextMenu(self.menu)
@@ -47,13 +50,13 @@ class List2SystemTray(UserDict.DictMixin):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
-    w = QtGui.QWidget()
-    tray_icon = List2SystemTray(QtGui.QIcon("gf-16x16.png"), w)
+    app = QApplication(sys.argv)
+    w = QWidget()
+    tray_icon = List2SystemTray(QIcon("gf-16x16.png"), w)
     console_man = ItemToActionDictInListUi()
     console_man["Good"] = {"checked": True, "action": None}
     tray_icon["Applications"] = console_man.show
-    tray_icon["Exit"] = QtGui.QApplication.quit
+    tray_icon["Exit"] = QApplication.quit
     sys.exit(app.exec_())
 
 

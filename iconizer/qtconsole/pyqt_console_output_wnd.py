@@ -1,8 +1,13 @@
-from PyQt4.QtGui import QApplication, QTextBrowser
-from PyQt4 import QtCore
+# from PyQt4.QtGui import QApplication, QTextBrowser
+# from PyQt4 import QtCore
 import sys
 
-from iconizer.console.console_output_collector import decode_str
+# from Qt import QtCore
+# from PyQt4.uic.uiparser import QtCore
+
+from PyQt4.QtGui import *
+from PyQt4 import QtCore
+from iconizer.iconizer_utils.str_utils import decode_str
 
 
 class ConsoleOutputWndBase(object):

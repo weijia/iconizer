@@ -10,11 +10,10 @@ def find_resource_in_sub_folders(filename):
             return os.path.join(dirpath, filename)
 
 
-try:
-    from pkg_resources import Requirement, resource_filename, resource_exists, DistributionNotFound
-
-
-    def find_resource_in_pkg(filename):
+def find_resource_in_pkg(filename):
+    try:
+        from pkg_resources import Requirement, resource_filename, resource_exists, DistributionNotFound
+        
         try:
             generated_path = resource_filename(Requirement.parse("iconizer"), "iconizer/qtconsole/%s" % filename)
             print generated_path
@@ -25,9 +24,5 @@ try:
             return None
         except DistributionNotFound:
             return find_resource_in_sub_folders(filename)
-except:
-    import os
-
-
-    def find_resource_in_pkg(filename):
+    except:
         return find_resource_in_sub_folders(filename)

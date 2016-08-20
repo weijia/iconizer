@@ -37,7 +37,7 @@ def terminateProcessByPid(pid):
         win32api.TerminateProcess(handle, -1)
         win32api.CloseHandle(handle)
     except:
-        print "pid: %d not killed, exception occurs", pid
+        print "pid: %d not killed, exception occurs" % pid
 
 
 def killChildProcessTree(pid, killRoot = False):

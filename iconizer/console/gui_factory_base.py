@@ -5,7 +5,7 @@ class GuiFactoryBase(object):
     def create_taskbar_icon_app(self):
         pass
 
-    def create_console_output_wnd(self, parent, logFilePath=None):
+    def create_console_output_wnd(self, parent, log_file_path=None):
         pass
 
     def start_msg_loop(self):

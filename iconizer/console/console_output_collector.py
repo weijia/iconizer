@@ -22,21 +22,21 @@ def decode_str(read_data):
 
 
 class ConsoleCollectWorkerThread(threading.Thread):
-    def __init__(self, target, file_descriptor, app_name='unknown', output_to_console=False, logFilePath=None):
+    def __init__(self, target, file_descriptor, app_name='unknown', output_to_console=False, log_file_path=None):
         self.target = target
         threading.Thread.__init__(self)
-        self.quitFlag = False
+        self.is_app_ended = False
         self.file_descriptor = file_descriptor
         self.app_name = app_name
         self.output_to_console = output_to_console
-        self.logFilePath = logFilePath
+        self.log_file_path = log_file_path
 
     def open_log_if_needed(self):
-        if not (self.logFilePath is None):
+        if not (self.log_file_path is None):
             try:
-                f = open(self.logFilePath, "w")
+                f = open(self.log_file_path, "w")
             except:
-                cl("Can not open: %s" % self.logFilePath)
+                cl("Can not open: %s" % self.log_file_path)
                 f = None
         else:
             f = None
@@ -45,15 +45,15 @@ class ConsoleCollectWorkerThread(threading.Thread):
     def run(self):
         # print 'running'
         f = self.open_log_if_needed()
-        while not self.quitFlag:
+        while not self.is_app_ended:
             # print 'before readline'
             read_data = self.file_descriptor.readline()
             read_data = decode_str(read_data)
             if read_data == '':
                 # print 'read_data is empty'
-                self.quit()
+                self.mark_app_as_ended()
             if read_data is None:
-                self.quit()
+                self.mark_app_as_ended()
                 # print 'quit'
                 break
             if self.output_to_console:
@@ -70,8 +70,8 @@ class ConsoleCollectWorkerThread(threading.Thread):
             f.close()
         print 'quitting run: ', self.app_name
 
-    def quit(self):
-        self.quitFlag = True
+    def mark_app_as_ended(self):
+        self.is_app_ended = True
 
 
 class ConsoleOutputCollector(object):
@@ -227,7 +227,13 @@ class ConsoleOutputCollector(object):
             sysprocess.killChildProcessTree(i.pid)
             sysprocess.TerminateProcess(i)
         for i in self.log_collector_thread_list:
-            i.quit()
+            i.mark_app_as_ended()
+
+    def is_app_ended(self):
+        for i in self.log_collector_thread_list:
+            if not i.is_app_ended:
+                return False
+        return True
 
     def send_stop_signal(self):
         pass

@@ -9,11 +9,15 @@ from ufs_tools.app_tools import get_executable
 from iconizer.django_in_iconizer.django_server import DjangoServer, DjangoServerExe
 
 
+def is_binary_executable(app_executable_full_path):
+    return "python.exe" in app_executable_full_path or ".py" in app_executable_full_path
+
+
 class IconizerTaskConfig(object):
     def __init__(self):
         super(IconizerTaskConfig, self).__init__()
         app_executable_full_path = get_executable()
-        if self.is_binary_executable(app_executable_full_path):
+        if is_binary_executable(app_executable_full_path):
             self.django_server = DjangoServer()
         else:
             self.django_server = DjangoServerExe()
@@ -21,9 +25,6 @@ class IconizerTaskConfig(object):
         root_folder = os.path.dirname(app_executable_full_path)
         # print "root folder name:", root_folder
         self.app = AppConfig(root_folder)
-
-    def is_binary_executable(self, app_executable_full_path):
-        return "python.exe" in app_executable_full_path or ".py" in app_executable_full_path
 
     def get_frontend_task_descriptor(self):
         return {}

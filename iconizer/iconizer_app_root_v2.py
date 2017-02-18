@@ -3,6 +3,7 @@ import threading
 import traceback
 
 from Pyro4.errors import CommunicationError
+from ufs_tools.short_decorator.ignore_exception import ignore_exc_with_result
 
 from iconizer import Iconizer
 from iconizer.iconizer_client import IconizerClient
@@ -20,29 +21,26 @@ class IconizerAppRootV2(object):
         self.iconizer = Iconizer(self.log_folder_full_path)
         self.client = IconizerClient()
 
+    @ignore_exc_with_result((KeyboardInterrupt, SystemExit))
     def start_iconized_applications(self):
-        try:
+        if True:  # try:
             threading.Thread(target=self.start_task_starter).start()
             # self.iconizer.add_final_close_listener(self.final_cleanup)
             self.iconizer.add_close_listener(self.final_cleanup)
             self.iconizer.execute(self.iconizer_config.get_frontend_task_descriptor())
-
-        except (KeyboardInterrupt, SystemExit):
-            raise
+        #
+        # except :
+        #     raise
             # print "stopping database"
 
     def start_task_starter(self):
         self.wait_for_pyro_server()
-        self.iconizer_config.sync_to_main_thread()
+        self.iconizer_config.start_other_tasks_depends_on_frontend_task()
         self.start_background_tasks()
 
     def start_background_tasks(self):
         print "executing in remote!!!!!!"
-        try:
-            self.execute_tasks(self.iconizer_config.get_background_tasks())
-        except:
-            traceback.print_exc()
-            pass
+        self.execute_tasks(self.iconizer_config.get_background_tasks())
 
     def wait_for_pyro_server(self):
         cnt = 100
@@ -56,6 +54,7 @@ class IconizerAppRootV2(object):
                 continue
             cnt -= 1
 
+    @ignore_exc_with_result(is_notification_needed=True)
     def execute_tasks(self, tasks):
         for task in tasks:
             self.client.execute_in_remote(task)

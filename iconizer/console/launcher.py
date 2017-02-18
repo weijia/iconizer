@@ -36,14 +36,13 @@ class CrossGuiLauncher(object):
         self.gui_factory = gui_factory
         self.taskbar_icon_app = self.gui_factory.create_taskbar_icon_app()
         self.app_list_ui_for_app_id_str_to_app_wnd_state = self.gui_factory.get_app_list()
+        self.msg_handler = GuiServiceMsgHandler(self)
         self.app_id_str_to_console_wnd = {}
         self.wnd_to_console_dict = {}
         self.log_collector_to_menu_item_dict = {}
         self.wnd_to_app_id_str_dict = {}
-        self.msg_handler = GuiServiceMsgHandler(self)
-
-        self.gui_factory.set_msg_callback(self.on_msg)
         self.launched_app_dict = {}
+        self.gui_factory.set_msg_callback(self.on_msg)
         # Called when user requesting closing app
         self.close_callback_list = []
         # Called when app notified all sub process before app will really quit
@@ -67,7 +66,24 @@ class CrossGuiLauncher(object):
         # print 'selected: ', app_id
         minimized = self.app_id_str_to_console_wnd[app_id_str].toggle()
         self.app_list_ui_for_app_id_str_to_app_wnd_state[app_id_str] = {"checked": not minimized,
-                                                                        "action": self.on_app_item_selected}
+                                                                        "action": self.on_app_item_selected,
+                                                                        "on_right_click": self.on_right_click
+                                                                        }
+
+    def on_right_click(self, app_title):
+        console_wnd = self.app_id_str_to_console_wnd[app_title]
+        console_output_manager = self.wnd_to_console_dict[console_wnd]
+        if console_output_manager.is_app_ended():
+            del self.app_id_str_to_console_wnd[app_title]
+            del self.wnd_to_console_dict[console_wnd]
+            del self.wnd_to_app_id_str_dict[console_wnd]
+            for launched_app in self.launched_app_dict:
+                if self.launched_app_dict[launched_app] == console_output_manager:
+                    break
+            del self.launched_app_dict[launched_app]
+            del console_wnd
+            del self.app_list_ui_for_app_id_str_to_app_wnd_state[app_title]
+            del console_output_manager
 
     def on_quit_clicked(self):
         # self.window.hide()
@@ -130,6 +146,7 @@ class CrossGuiLauncher(object):
             self.launched_app_dict[key] = {
                 "collector": self.create_console_wnd_for_app(app_descriptor_dict[key]),
                 "params": app_descriptor_dict[key],
+                "app_id": key,
             }
 
     def create_console_wnd_for_app(self, param):
@@ -138,30 +155,32 @@ class CrossGuiLauncher(object):
         param: [appFullPath, param1, param2, ...]
         """
         print "launching: ", param
-        l = logDir(os.path.basename(param[0]), self.log_dir)
-        child_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())
+        app_full_path = param[0]
+        l = logDir(os.path.basename(app_full_path), self.log_dir)
+        app_log_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())
         log_collector = ConsoleOutputCollector(l.getLogFilePath(), self.python_executable)
         cwd = os.getcwd()
-        log_collector.run_app_in_window(child_wnd, cwd, param)
-        self.wnd_to_console_dict[child_wnd] = log_collector
-        child_wnd.set_title(param[0])
+        log_collector.run_app_in_window(app_log_wnd, cwd, param)
+        self.wnd_to_console_dict[app_log_wnd] = log_collector
+        app_log_wnd.set_title(app_full_path)
 
         cnt = 1
-        app_name = os.path.basename(param[0])
-        app_path = os.path.dirname(param[0])
+        app_name = os.path.basename(app_full_path)
+        app_path = os.path.dirname(app_full_path)
         app_path_and_param_gen_str = "%s %s (%s)" % (app_name, str(param[1:]), app_path)
         if app_path_and_param_gen_str in self.app_id_str_to_console_wnd:
             while app_path_and_param_gen_str + '-' + str(cnt) in self.app_id_str_to_console_wnd:
                 cnt += 1
             app_path_and_param_gen_str = app_path_and_param_gen_str + '-' + str(cnt)
 
-        self.app_id_str_to_console_wnd[app_path_and_param_gen_str] = child_wnd
-        self.wnd_to_app_id_str_dict[child_wnd] = app_path_and_param_gen_str
-        # self.app_name_to_collector[app_path_and_param_gen_str] = collector
-        self.log_collector_to_menu_item_dict[log_collector] = child_wnd
-        # self.taskbar_icon_app[app_path_and_param_gen_str] = self.on_app_item_selected
+        self.app_id_str_to_console_wnd[app_path_and_param_gen_str] = app_log_wnd
+        self.wnd_to_app_id_str_dict[app_log_wnd] = app_path_and_param_gen_str
+        self.log_collector_to_menu_item_dict[log_collector] = app_log_wnd
+
         self.app_list_ui_for_app_id_str_to_app_wnd_state[app_path_and_param_gen_str] = \
-            {"checked": False, "action": self.on_app_item_selected}
+            {"checked": False,
+             "action": self.on_app_item_selected,
+             "on_right_click": self.on_right_click}
         return log_collector
 
 

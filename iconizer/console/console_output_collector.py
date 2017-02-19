@@ -142,6 +142,11 @@ class ConsoleOutputCollector(object):
             # self.appStarted = True
 
     def is_app_or_script_exists(self, app_or_script_path_and_param_list):
+        """
+
+        :param app_or_script_path_and_param_list: must be a list and first element is the executable/script
+        :return:
+        """
         self.app_full_path = app_or_script_path_and_param_list
         if type(self.app_full_path) == list:
             possible_installed_python_script = os.path.join(os.path.dirname(self.get_python_executable()),

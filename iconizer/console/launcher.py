@@ -78,9 +78,9 @@ class CrossGuiLauncher(object):
             del self.wnd_to_console_dict[console_wnd]
             del self.wnd_to_app_id_str_dict[console_wnd]
             for launched_app in self.launched_app_dict:
-                if self.launched_app_dict[launched_app] == console_output_manager:
+                if self.launched_app_dict[launched_app]["collector"] == console_output_manager:
+                    del self.launched_app_dict[launched_app]
                     break
-            del self.launched_app_dict[launched_app]
             del console_wnd
             del self.app_list_ui_for_app_id_str_to_app_wnd_state[app_title]
             del console_output_manager

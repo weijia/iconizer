@@ -16,21 +16,21 @@ def is_binary_executable(app_executable_full_path):
 class IconizerTaskConfig(object):
     def __init__(self):
         super(IconizerTaskConfig, self).__init__()
-        app_executable_full_path = get_executable()
-        if is_binary_executable(app_executable_full_path):
-            self.django_server = DjangoServer()
-        else:
-            self.django_server = DjangoServerExe()
         # root_folder = os.path.basename(get_folder(get_inspection_frame(2)))
-        root_folder = os.path.dirname(app_executable_full_path)
+        self.executable = get_executable()
+        root_folder = os.path.dirname(self.executable)
         # print "root folder name:", root_folder
         self.app = AppConfig(root_folder)
 
     def get_frontend_task_descriptor(self):
-        return {}
+        return {"dummy task name": ["dummy task executable", "dummy param1"]}
 
+    # noinspection PyMethodMayBeStatic
     def get_background_tasks(self):
         return []
+
+    def start_other_tasks_depends_on_frontend_task(self):
+        pass
 
     def get_cleanup_task_descriptors(self):
         """
@@ -40,3 +40,12 @@ class IconizerTaskConfig(object):
 
     def get_app_config(self):
         return self.app
+
+
+class IconizerDjangoTaskConfig(IconizerTaskConfig):
+    def __init__(self):
+        super(IconizerDjangoTaskConfig, self).__init__()
+        if is_binary_executable(self.executable):
+            self.django_server = DjangoServer()
+        else:
+            self.django_server = DjangoServerExe()

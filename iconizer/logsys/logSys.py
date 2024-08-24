@@ -1,7 +1,7 @@
 import logging
 import logging.config
 import inspect
-import ConfigParser
+import configparser
 import sys
 import time
 
@@ -17,7 +17,7 @@ simpleLogConfigCache = {}#Used to init a logger if there is no logger setting in
 logSys = logging
 
 def openLogConfig(fileName):
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     try:
       config.read(fileName)
     except:
@@ -46,23 +46,23 @@ def getLoggerNames(config):
 def updateLogConfig(fileName, loggerName):
     config = openLogConfig(fileName)
     try:
-		config.set('loggers', 'keys', config.get('loggers', 'keys')+','+loggerName)
-		#print 'new logger names:',config.get('loggers', 'keys')
-		config.add_section('logger_'+loggerName)
-		config.set('logger_'+loggerName, 'handlers', 'consoleHandler')
-		config.set('logger_'+loggerName, 'propagate', '0')
-		config.set('logger_'+loggerName, 'level', 'ERROR')
-		config.set('logger_'+loggerName, 'qualname', loggerName)
-		configfile = open(fileName, 'wb')
-		config.write(configfile)
+        config.set('loggers', 'keys', config.get('loggers', 'keys')+','+loggerName)
+        #print 'new logger names:',config.get('loggers', 'keys')
+        config.add_section('logger_'+loggerName)
+        config.set('logger_'+loggerName, 'handlers', 'consoleHandler')
+        config.set('logger_'+loggerName, 'propagate', '0')
+        config.set('logger_'+loggerName, 'level', 'ERROR')
+        config.set('logger_'+loggerName, 'qualname', loggerName)
+        configfile = open(fileName, 'wb')
+        config.write(configfile)
     except:
-		configfile = open(fileName, 'wb')
-		try:
-			config.add_section('loggers')
-		except:
-			pass
-		config.set('loggers', 'keys', '')
-		config.write(configfile)
+        configfile = open(fileName, 'wb')
+        try:
+            config.add_section('loggers')
+        except:
+            pass
+        config.set('loggers', 'keys', '')
+        config.write(configfile)
       
 loadLogConofig(logFile)
 
@@ -100,7 +100,7 @@ def changeEncoding(s):
     try:
         str(s)
     except:
-        print type(s)
+        print(type(s))
     return str(s)
 
 class customLogSys:
@@ -133,8 +133,9 @@ def info(*args):
     logStr = ''
     for i in args:
         logStr += changeEncoding(i)+" "
-    print logStr,
-    
+    print(logStr, end=' ')
+
+
 def ninfo(*args):
     pass
     

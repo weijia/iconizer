@@ -37,7 +37,7 @@ def terminateProcessByPid(pid):
         win32api.TerminateProcess(handle, -1)
         win32api.CloseHandle(handle)
     except:
-        print "pid: %d not killed, exception occurs" % pid
+        print("pid: %d not killed, exception occurs" % pid)
 
 
 def killChildProcessTree(pid, killRoot = False):
@@ -58,7 +58,7 @@ def killChildProcessTree(pid, killRoot = False):
 def TerminateProcess(process_info):
     try:
         win32api.TerminateProcess(int(process_info._handle), -1)
-        print process_info.pid, "killed, maybe not a good way."
+        print(process_info.pid, "killed, maybe not a good way.")
     except pywintypes.error:
         logger = logging.getLogger(__name__)
         logger.info("killing failed, app may terminated by itself: "+str(process_info.pid))

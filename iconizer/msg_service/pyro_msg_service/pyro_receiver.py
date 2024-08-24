@@ -1,4 +1,4 @@
-from Queue import Queue
+from queue import Queue
 from iconizer.pyro_service_base import PyroServiceBase
 
 __author__ = 'weijia'

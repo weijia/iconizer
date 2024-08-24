@@ -36,6 +36,8 @@ setup(
     package_dir={'iconizer': 'iconizer'},
     include_package_data=True,
     install_requires=[
+        'Pyro4',
+        'rpyc',
     ],
     license="BSD",
     zip_safe=False,

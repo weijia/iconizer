@@ -1,7 +1,7 @@
 import logging
 import Pyro4
 from iconizer.msg_service.msg_service_interface.msg_service_factory_interface import MsgServiceFactory
-from iconizer_consts import ICONIZER_SERVICE_NAME
+from .iconizer_consts import ICONIZER_SERVICE_NAME
 
 log = logging.getLogger(__name__)
 

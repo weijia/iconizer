@@ -25,7 +25,7 @@ class GuiServiceMsgHandler(object):
     def handle_msg(self, msg):
         command = msg["command"]
         if command == "launch":
-            print "apps: ", msg["apps"]
+            print("apps: ", msg["apps"])
             self.gui_launch_manger.execute_iconized(msg["apps"])
         elif command == "Browser":
             url = msg["url"]

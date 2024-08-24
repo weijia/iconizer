@@ -1,9 +1,9 @@
 # import traceback
 import traceback
-from console_output_collector import ConsoleOutputCollector
+from .console_output_collector import ConsoleOutputCollector
 import os
 from iconizer.logsys.logDir import logDir, ensure_dir
-from msg_handler import GuiServiceMsgHandler
+from .msg_handler import GuiServiceMsgHandler
 # import webbrowser
 # import sys
 # import time
@@ -91,7 +91,7 @@ class CrossGuiLauncher(object):
         # print 'on_quit_clicked, send KeyInterrupts to apps'
         call_callbacks_in_list_no_exception(self.close_callback_list)
 
-        print 'wait for 10 seconds'
+        print('wait for 10 seconds')
         # Use gui factory method, so UI will not be blocked
         self.gui_factory.timeout(5000, self.final_quit)
 
@@ -110,19 +110,19 @@ class CrossGuiLauncher(object):
         self.taskbar_icon_app["Show/Hide"] = self.app_list_ui_for_app_id_str_to_app_wnd_state.ui_widget.toggle
         self.taskbar_icon_app["Exit"] = self.on_quit_clicked
         self.gui_factory.start_msg_loop()
-        print "launcher.py", "quitting msg loop"
+        print("launcher.py", "quitting msg loop")
 
     ###############################
     # Internal functions
     ###############################
     def final_quit(self):
-        print 'start to killing apps'
+        print('start to killing apps')
         for log_collector in self.log_collector_to_menu_item_dict.keys():
             log_collector.kill_console_process_tree()
 
-        print "before factory exit"
+        print("before factory exit")
         self.gui_factory.abort_msg_loop()
-        print "calling final close handlers"
+        print("calling final close handlers")
         call_callbacks_in_list_no_exception(self.final_close_callback_list)
 
     def on_msg(self, data):
@@ -140,9 +140,9 @@ class CrossGuiLauncher(object):
         # Send request to start a new app
         for key in app_descriptor_dict:
             if key in self.launched_app_dict:
-                print "Application named: %s is already occupied" % key
+                print("Application named: %s is already occupied" % key)
                 return
-            print key, app_descriptor_dict[key]
+            print(key, app_descriptor_dict[key])
             self.launched_app_dict[key] = {
                 "collector": self.create_console_wnd_for_app(app_descriptor_dict[key]),
                 "params": app_descriptor_dict[key],
@@ -154,7 +154,7 @@ class CrossGuiLauncher(object):
         Start an app with full path and parameters passed in a list
         param: [appFullPath, param1, param2, ...]
         """
-        print "launching: ", param
+        print("launching: ", param)
         app_full_path = param[0]
         l = logDir(os.path.basename(app_full_path), self.log_dir)
         app_log_wnd = self.gui_factory.create_console_output_wnd(self, l.getLogFilePath())

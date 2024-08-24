@@ -1,10 +1,9 @@
-from Queue import Queue
+from queue import Queue
 import inspect
 import logging
-import os
 import Pyro4
 from iconizer.msg_service.pyro_msg_service.pyro_receiver_base import PyroReceiverBase
-from stoppable_thread import StoppableThread
+from .stoppable_thread import StoppableThread
 
 log = logging.getLogger(__name__)
 
@@ -61,7 +60,7 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
         print("Pyro service uri: " + str(self.uri))
 
     def get_channel_full_name(self):
-        print self.uri
+        print(self.uri)
         return str(self.uri)
 
     def register_to_name_server(self):
@@ -69,19 +68,19 @@ class PyroServiceBase(PyroReceiverBase, StoppableThread):
             raise "Pyro daemon must be started first using create_daemon"
         ns = Pyro4.locateNS()
         log.debug("Registering ", self.service_name)
-        print "Registering ", self.service_name
+        print("Registering ", self.service_name)
         ns.register(self.service_name, self.uri)
 
     # noinspection PyMethodMayBeStatic
     def still_running(self):
-        print "still running"
+        print("still running")
         return True
 
     def pyro_shutdown(self):
-        print 'shutting down daemon'
+        print('shutting down daemon')
         self.pyro_daemon.shutdown()
         self.set_stop()
-        print 'shutdown complete'
+        print('shutdown complete')
 
     def get_filename(self):
         inspect_getouterframes = inspect.getouterframes(inspect.currentframe())

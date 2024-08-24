@@ -72,5 +72,5 @@ class PyroMsgServiceProvider(MsgServiceProviderInterface):
         if receiver in service_dict:
             return Pyro4.Proxy(service_dict[receiver])
         else:
-            print "unknown receiver:", receiver
+            print("unknown receiver:", receiver)
             raise UnknownReceiver

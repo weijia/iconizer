@@ -25,12 +25,12 @@ class IconizerServer(PyroServiceBase):
         """
         Send command msg to GUI
         """
-        print "sending msg:", msg
+        print("sending msg:", msg)
         self.get_gui_launch_manager().send_msg(msg)
 
     # noinspection PyMethodMayBeStatic
     def is_running(self):
-        print "is_running_called"
+        print("is_running_called")
         return True
 
     ######################

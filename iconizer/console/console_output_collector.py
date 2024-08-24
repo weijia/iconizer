@@ -68,7 +68,7 @@ class ConsoleCollectWorkerThread(threading.Thread):
             self.target.update_view_callback(read_data)
         if not (f is None):
             f.close()
-        print 'quitting run: ', self.app_name
+        print('quitting run: ', self.app_name)
 
     def mark_app_as_ended(self):
         self.is_app_ended = True
@@ -124,7 +124,7 @@ class ConsoleOutputCollector(object):
 
     def run_app_in_window(self, target, cwd, app_or_script_path_and_param_list):
         if not self.is_app_or_script_exists(app_or_script_path_and_param_list):
-            print "%s does not exist" % self.app_full_path
+            print("%s does not exist" % self.app_full_path)
             return
         self.validate_cur_working_dir(cwd)
         self.console_window = target
@@ -132,13 +132,13 @@ class ConsoleOutputCollector(object):
         self.set_window_title(app_or_script_path_and_param_list)
 
         self.get_actual_execute_path_and_param_list(app_or_script_path_and_param_list)
-        print self.real_execute_path_and_param_list
+        print(self.real_execute_path_and_param_list)
 
         if True:  # try:
             self.start_app_and_collect_logs(app_or_script_path_and_param_list, target)
             # print 'launch ok'
         else:  # except:
-            print 'launch exception'
+            print('launch exception')
             # self.appStarted = True
 
     def is_app_or_script_exists(self, app_or_script_path_and_param_list):
@@ -164,7 +164,7 @@ class ConsoleOutputCollector(object):
             self.console_window.set_title(str(app_or_script_path_and_param_list))
         except:
             traceback.print_exc()
-            print "set title not supported"
+            print("set title not supported")
             # print target
 
     def start_app_and_collect_logs(self, app_or_script_path_and_param_list, console_window):
@@ -211,7 +211,7 @@ class ConsoleOutputCollector(object):
     def validate_cur_working_dir(self, cwd):
         self.cwd = cwd
         if not (os.path.exists(self.cwd)):
-            print 'execution path does not exist: ', self.cwd
+            print('execution path does not exist: ', self.cwd)
         # self.app_path_and_param = app_or_script_path_and_param_list
 
     def get_actual_execute_path_and_param_list(self, app_or_script_path_and_param_list):
@@ -228,7 +228,7 @@ class ConsoleOutputCollector(object):
     def kill_console_process_tree(self):
         # TODO: do we need to kill applications?
         for i in self.process_list:
-            print 'processing:', i.pid, ", handle: ", int(i._handle)
+            print('processing:', i.pid, ", handle: ", int(i._handle))
             sysprocess.killChildProcessTree(i.pid)
             sysprocess.TerminateProcess(i)
         for i in self.log_collector_thread_list:
